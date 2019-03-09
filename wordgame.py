@@ -252,19 +252,19 @@ class GameApp(App):
         self.sqPoints = 0  #20*len(questions)
         maxTime = 30 #6seconds
         maxWTime = 35 #5
-        if (self.ansWord == True)and(self.timeElapsed > maxWTime)and(ans != self.equivSumList[self.currGrid-1]):
+        if (self.ansWord)and(self.timeElapsed > maxWTime)and(ans != self.equivSumList[self.currGrid-1]):
             self.errMsg = self.incorrectTag
             self.errDef =self.timeExceedTag+self.ansTag+self.randLineList[self.currGrid-1]
             self.sqPoints -= 20 
-        elif (self.ansWord == True)and(self.timeElapsed > maxWTime):
+        elif (self.ansWord)and(self.timeElapsed > maxWTime):
             self.errMsg = self.correctTag
             self.errDef = self.timeExceedTag+self.ansTag+self.randLineList[self.currGrid-1]
             self.sqPoints -= 5 
-        elif (self.ansWord == True)and(ans != self.equivSumList[self.currGrid-1]):
+        elif (self.ansWord)and(ans != self.equivSumList[self.currGrid-1]):
             self.errMsg = self.incorrectTag
             self.errDef = self.corrAnsTag+self.randLineList[self.currGrid-1]
             self.sqPoints -= 15
-        elif (self.ansWord == True):
+        elif (self.ansWord):
             if(self.currGrid == self.jackSq):
                 self.errMsg = self.jckptHeadTag
                 self.errDef = self.jckptDefTag
