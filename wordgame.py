@@ -10,7 +10,7 @@ import os
 from kivy.app import App
 from kivy.base import runTouchApp
 #kivy.require("1.8.0")
-from kivy.properties import StringProperty, AliasProperty, BooleanProperty
+from kivy.properties import StringProperty, AliasProperty, BooleanProperty,ListProperty
 from kivy.uix.label import Label
 from kivy.uix.button import Button
 from kivy.uix.floatlayout import FloatLayout
@@ -99,6 +99,7 @@ class GameApp(App):
     icon = 'images/one2oneMap.png'
     normThemeButton = "button"
     singleWordFileName = "words.txt"
+    imageThemeFile = "ImageTheme.txt"
     workScreenName = "work"
     doneScreenName = "done"
     correctTag =  "Correct"
@@ -123,6 +124,23 @@ class GameApp(App):
     pointLabelTxt = StringProperty()
     sumTxt =StringProperty()
     wrdTxt =StringProperty()
+
+    fnGridImage0 = StringProperty()
+    fnGridImage1 = StringProperty()
+    fnGridImage2 = StringProperty()
+    fnGridImage3 = StringProperty()
+    fnGridImage4 = StringProperty()
+    fnGridImage5 = StringProperty()
+    fnGridImage6 = StringProperty()
+    fnGridImage7 = StringProperty()
+    fnGridImage8 = StringProperty()
+    fnGridImage9 = StringProperty()
+    fnGridImage10 = StringProperty()
+    fnGridImage11 = StringProperty()
+    fnGridImage12 = StringProperty()
+    fnGridImage13 = StringProperty()
+    fnGridImage14 = StringProperty()
+    fnGridImage15 = StringProperty()
    
     btnDisabled =  BooleanProperty()
     btn2Disabled = BooleanProperty()
@@ -139,7 +157,25 @@ class GameApp(App):
     btn13Disabled = BooleanProperty()
     btn14Disabled = BooleanProperty()
     btn15Disabled = BooleanProperty()
-    btn16Disabled = BooleanProperty()
+    btn16Disabled = BooleanProperty()  
+
+    bck_color  = ListProperty()
+    bck2_color  = ListProperty()
+    bck3_color  = ListProperty()
+    bck4_color  = ListProperty()
+    bck5_color  = ListProperty()
+    bck6_color  = ListProperty()
+    bck7_color  = ListProperty()
+    bck8_color  = ListProperty()
+    bck9_color  = ListProperty()
+    bck10_color  = ListProperty()
+    bck11_color  = ListProperty()
+    bck12_color  = ListProperty()
+    bck13_color  = ListProperty()
+    bck14_color  = ListProperty()
+    bck15_color  = ListProperty()
+    bck16_color  = ListProperty()
+
     
     def __init__(self, **kwargs):
         super(GameApp,self).__init__(**kwargs)
@@ -148,6 +184,7 @@ class GameApp(App):
         self.questionsList = [[]]
         self.randLineList = []
         self.equivSumList = [[]]
+        self.fnGridImageList = []
         self.questionkvString = ""
         self.sqPoints = 0 
         self.totalPoints=0
@@ -160,26 +197,42 @@ class GameApp(App):
         self.screenName = self.workScreenName
         self.selGridScreen =""
         self.pointLabelTxt = "Total points: 0"
+        self.debug = 0
+       # self.appwidth = 0  #debug
+        #self.appheight=0   #debug
         #self.makeMapTable()
+        self.set_all_btn_Disabled(False)
+        self.set_all_bck_color([1,1,1,1])
+        self.fnGridImageList = ['']*16
+       
 
-        
-        self.btnDisabled = False
-        self.btn2Disabled = False
-        self.btn3Disabled = False
-        self.btn4Disabled = False
-        self.btn5Disabled = False
-        self.btn6Disabled = False
-        self.btn7Disabled = False
-        self.btn8Disabled = False
-        self.btn9Disabled = False
-        self.btn10Disabled = False
-        self.btn11Disabled = False
-        self.btn12Disabled = False
-        self.btn13Disabled = False
-        self.btn14Disabled = False
-        self.btn15Disabled = False
-        self.btn16Disabled = False
-    
+    def collectGridImages(self):
+        #self.fnGridImageList = []
+        randTheme = self.random_line(self.imageThemeFile)
+        dirRandTheme = 'images/'+randTheme+'/'
+        for g in range(self.gridsize):
+            fnGridImage = self.random_line(dirRandTheme+randTheme+'.txt')
+            self.fnGridImageList[g] = dirRandTheme+fnGridImage#.append(dirRandTheme+fnGridImage)
+            if(self.debug):
+                print(self.fnGridImageList[g])   #debug
+        self.fnGridImage0 = self.fnGridImageList[0]
+        self.fnGridImage1 = self.fnGridImageList[1]
+        self.fnGridImage2 = self.fnGridImageList[2]
+        self.fnGridImage3 = self.fnGridImageList[3]
+        if (self.gridsize > 4):
+            self.fnGridImage4 = self.fnGridImageList[4]
+            self.fnGridImage5 = self.fnGridImageList[5]
+            self.fnGridImage6 = self.fnGridImageList[6]
+            self.fnGridImage7 = self.fnGridImageList[7]
+            self.fnGridImage8 = self.fnGridImageList[8]
+        if (self.gridsize > 9):
+            self.fnGridImage9 = self.fnGridImageList[9]
+            self.fnGridImage10 = self.fnGridImageList[10]
+            self.fnGridImage11 = self.fnGridImageList[11]
+            self.fnGridImage12 = self.fnGridImageList[12]
+            self.fnGridImage13 = self.fnGridImageList[13]
+            self.fnGridImage14 = self.fnGridImageList[14]
+            self.fnGridImage15 = self.fnGridImageList[15]
     
     def collectQuestions(self):
         self.questionsList = [[]]
@@ -189,7 +242,8 @@ class GameApp(App):
         self.sqPoints = 0 
         self.qpos = 0
         self.cnt = 0
-        print(self.gridsize)
+        if(self.debug):
+            print(self.gridsize)  #debug
         self.jackSq = 0
         if self.gridsize > 4:
             self.jackSq = random.randint(1, self.gridsize)
@@ -198,7 +252,8 @@ class GameApp(App):
             equivSum = self.mapLine(randLine)
             numSeq = self.pack_rand_vals_of_sum(equivSum)
             questions = self.get_all_quests_in_square(numSeq)
-            print(questions)
+            if(self.debug):
+                print(questions)  #debug
             self.questionsList.append(questions)
             self.randLineList.append(randLine)
             self.equivSumList.append(equivSum)
@@ -208,13 +263,15 @@ class GameApp(App):
         #self.collectOneQuestion()
 
     def collectOneQuestion (self):
-        print(self.currGrid)
-        print(self.qpos)
+        if(self.debug):
+            print(self.currGrid)    #debug
+            print(self.qpos)       #debug
         if(self.questionsList == [[]]):
             self.questionkvString = "Init"
         else:
             self.questionkvString = self.questionsList[self.currGrid-1][self.qpos]
-        print(self.questionkvString)
+        if(self.debug):
+            print(self.questionkvString)  #debug
         self.start = time.time()
         return self.questionkvString
 
@@ -223,7 +280,9 @@ class GameApp(App):
         self.screenName = self.workScreenName
         self.timeElapsed = 0
         self.timeElapsed = time.time() - self.start
-        if (self.ansWord == True):
+        #print("width = "+str(self.appwidth))   #debug
+        #print("height = "+str(self.appheight))  #debug
+        if (self.ansWord):
             try:
                 ans = str(self.ans_ent)
             except(TypeError):
@@ -236,7 +295,8 @@ class GameApp(App):
                     self.errMsg=self.invalidEntryTag
                     self.errDef= self.enterAlphaTag
                 else:
-                    print("YAY" + str(ans))
+                    if(self.debug):
+                        print("YAY" + str(ans))   #debug
                     self.checkAns(ansSum)
         else:
             try:
@@ -245,7 +305,8 @@ class GameApp(App):
                 self.errMsg=self.invalidEntryTag
                 self.errDef=self.enterIntTag
             else:
-                print("YAY" + str(ans))
+                if(self.debug):
+                    print("YAY" + str(ans))   #debug
                 self.checkAns(ans)
 
     def checkAns(self,ans):
@@ -349,7 +410,25 @@ class GameApp(App):
         self.btn16Disabled = stvalue
         #print(self.btnDisabled)
         
-    
+    def set_all_bck_color(self,val):
+        self.bck_color  = val
+        self.bck2_color  = val
+        self.bck3_color  = val
+        self.bck4_color  = val
+        self.bck5_color  = val
+        self.bck6_color  = val
+        self.bck7_color  = val
+        self.bck8_color  = val
+        self.bck9_color  = val
+        self.bck10_color  = val
+        self.bck11_color  = val
+        self.bck12_color  = val
+        self.bck13_color  = val
+        self.bck14_color  = val
+        self.bck15_color  = val
+        self.bck16_color  = val
+        
+
 
     def restart(self):
         self.questionsList = [[]]
