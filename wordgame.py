@@ -392,7 +392,7 @@ class GameApp(App):
     def endGame(self):
         self.screenName = self.doneScreenName 
         if (self.numSquareDone == self.gridsize):
-            self.questionkvString = """Congratulations! You're All Done!\nGrid Completetion Time: """+str(self.endGrid-self.startGrid)+"\nTotal Points Earned: " +str(self.totalPoints)+"."
+            self.questionkvString = """Congratulations! You're All Done!\nGrid Completion Time: """+str(int(self.endGrid-self.startGrid))+"\nTotal Points Earned: " +str(self.totalPoints)+"."
         else:
             self.questionkvString = """Incomplete Grid!\nTotal Points Earned is """ +str(self.totalPoints)+"."
 
