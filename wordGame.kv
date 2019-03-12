@@ -737,10 +737,13 @@ ScreenManagement:
             text: app.questionkvString 
             font_name: '6809 chargen.ttf'
             markup: True
-            font_size:30   
-            size: self.texture_size
-            pos_hint:{'center_x':0.4, 'center_y':0.7}  
-            #size_hint:0.3,0.2 
+            #font_size:30   
+            pos_hint:{'center_x':0.35, 'center_y':0.7}  
+            font_size: root.width*0.0375  #15  
+            size_hint_y: None
+            text_size: 400,None  #self.width, None  #
+            height: self.texture_size[1]  
+            halign: 'left'
             color: 0,0,1,1
         Button:
             id: b1

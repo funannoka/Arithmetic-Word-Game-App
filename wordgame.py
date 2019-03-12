@@ -260,6 +260,7 @@ class GameApp(App):
         self.questionsList=self.questionsList[1:]
         self.equivSumList=self.equivSumList[1:]
         self.numSquareDone =0
+        self.startGrid = time.time()
         #self.collectOneQuestion()
 
     def collectOneQuestion (self):
@@ -381,6 +382,7 @@ class GameApp(App):
         self.wrdTxt +=  "  "+self.randLineList[self.currGrid-1]
         self.sumTxt = self.drvdSumTag
         if (self.numSquareDone == self.gridsize):
+            self.endGrid = time.time()
             self.endGame()
         else:
             self.screenName = self.selGridScreen 
@@ -389,7 +391,10 @@ class GameApp(App):
 
     def endGame(self):
         self.screenName = self.doneScreenName 
-        self.questionkvString = """You're All Done!\nTotal Points Earned is """ +str(self.totalPoints)+"."
+        if (self.numSquareDone == self.gridsize):
+            self.questionkvString = """Congratulations! You're All Done!\nGrid Completetion Time: """+str(self.endGrid-self.startGrid)+"\nTotal Points Earned: " +str(self.totalPoints)+"."
+        else:
+            self.questionkvString = """Incomplete Grid!\nTotal Points Earned is """ +str(self.totalPoints)+"."
 
     def set_all_btn_Disabled(self,stvalue):
         self.btnDisabled = stvalue
