@@ -663,17 +663,17 @@ ScreenManagement:
                 text: app.questionkvString
                 font_name: '6809 chargen.ttf'
                 markup: True
-                font_size: root.width*0.025 #20 
-                pos_hint:{'center_x':0.34, 'center_y':0.55}   #0.4 right:,top:
+                font_size: root.width*0.0225#root.width*0.025 #20 
+                pos_hint:{'center_x':0.285, 'center_y':0.55}#0.34   #0.4 right:,top:
                 size_hint_y: None
-                text_size: 400,None  #self.width, None  #
+                text_size: 320,None  #self.width, None  #
                 height: self.texture_size[1]  
                 halign: 'left'
                 #size_hint:0.3,0.2 
-                color: 0,0,1,1
+                color: 1,1,0.6,1
             Label:
                 text: app.sumTxt+'\n'+app.wrdTxt 
-                font_name: '6809 chargen.ttf'
+                font_name: 'OpenSans-Regular.ttf'
                 markup: True
                 font_size: root.width*0.0188  #15  
                 pos_hint:{'center_x':0.34, 'center_y':0.2}   #0.4
@@ -681,19 +681,20 @@ ScreenManagement:
                 text_size: 400,None  #self.width, None  #
                 height: self.texture_size[1]  
                 halign: 'left'
-                color: 1,1,1,1
+                color: 1,1,0.6,1
             TextInput:
                 id: tinput
-                font_name: 'zorque.ttf'#'ROCK.ttf'#'calibrib.ttf''/Library/Fonts/Rockwell.ttc'
-                font_size: '20sp'
+                font_name: 'georgia.ttf'
+                font_size: '24sp'
                 halign: 'left'
-                size_hint: 0.125,0.1
+                size_hint: 0.125,0.07
                 pos_hint:{'center_x':0.15, 'center_y':0.4}
                 multiline: False
-                background_color: 1.71, 1.83, 1.83, 1   #171, 183, 183, 1 #rgba(103, 128, 159, 1)
+                background_color: 1, 1, 0.6, 1   #171, 183, 183, 1 #rgba(103, 128, 159, 1)
             Button:
                 on_release: 
                     app.ans_ent = tinput.text
+                    tinput.text = ""
                     app.collectAns()
                     Factory.MyPopup().open()
                     #app.qpos +=1
@@ -703,10 +704,10 @@ ScreenManagement:
                 text: "Enter"
                 font_name: '6809 chargen.ttf'
                 markup: True
-                font_size:15   
+                font_size:root.width*0.0188#15   
                 size: self.texture_size
                 pos_hint:{'center_x':0.35, 'center_y':0.4}  
-                size_hint:0.125,0.1 
+                size_hint:0.125,0.07 
                 color: 1,0,1,1
             Image:
                 allow_stretch: True

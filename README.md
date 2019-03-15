@@ -1,5 +1,17 @@
 # Arithmetic Word Game App For Grade School Kids
 
+![alt text](gameScreens/LandingPage.png)
+![alt text](gameScreens/LevelsPage.png)
+![alt text](gameScreens/level_1_sample_grid.png)
+![alt text](gameScreens/level_2_sample_grid.png)
+![alt text](gameScreens/level_3_sample_grid.png)
+![alt text](gameScreens/working_screen.png)
+![alt text](gameScreens/enter_word.png)
+![alt text](gameScreens/done_screen.png)
+![alt text](gameScreens/level2_4grids_completed.png)
+
+## Scope
+
 1. Display a grid of squares.
 2. Each level has a designated number of squares increasing as follows:
     level 1=2^2  
@@ -42,7 +54,7 @@
 1. Install python 3
 2. Install pip/pip3
 3. Install kivy (follow Instructions for your operating system, may be required to install pygame)
-4. Install all fonts located in directory 'fonts/' to your system
+4. Install all fonts located in directory 'fonts/' to your system (if not already installed)
 
 ## Command to run
 

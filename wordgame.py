@@ -85,13 +85,6 @@ class DoneScreen(Screen):
 class ScreenManagement(ScreenManager):
     pass
 
-# class TotalPointsLabel(Label):
-#     def __init__(self, **kwargs):
-#         super(TotalPointsLabel,self).__init__(**kwargs)
-#         #self.totalPoints=0
-#         self.offset=100
-
-
 
 
 class GameApp(App):
@@ -108,14 +101,14 @@ class GameApp(App):
     ansTag = "Answer: "
     tblRow1 = ""
     tblrow2 = ""
-    timeExceedTag = "You exceeded the time Limit!\n"
+    timeExceedTag = "You exceeded the time limit!\n"
     invalidEntryTag ="Invalid entry."
     enterAlphaTag ="Enter a string of alphabets."
     enterIntTag = "Enter an integer."
-    drvdSumTag = "Derived Sums:   "
-    drvdWrdTag = "Derived Words: "
-    jckptHeadTag = "Congratulations you hit a jackpot!"
-    jckptDefTag = "Extra Points Gained = 50 points!"
+    drvdSumTag = "Your Sums:  "
+    drvdWrdTag = "Word Bank: "
+    jckptHeadTag = "Congratulations you've hit a jackpot!"
+    jckptDefTag = "Your Bonus Point is 50 !"
     questionkvString = StringProperty()
     errMsg = StringProperty()
     errDef = StringProperty()
@@ -185,6 +178,7 @@ class GameApp(App):
         self.randLineList = []
         self.equivSumList = [[]]
         self.fnGridImageList = []
+        self.fnGridImArr = []
         self.questionkvString = ""
         self.sqPoints = 0 
         self.totalPoints=0
@@ -197,7 +191,7 @@ class GameApp(App):
         self.screenName = self.workScreenName
         self.selGridScreen =""
         self.pointLabelTxt = "Total points: 0"
-        self.debug = 0
+        self.debug = 1
        # self.appwidth = 0  #debug
         #self.appheight=0   #debug
         #self.makeMapTable()
@@ -207,14 +201,18 @@ class GameApp(App):
        
 
     def collectGridImages(self):
-        #self.fnGridImageList = []
+        self.fnGridImageList = []
+        self.fnGridImArr = []
         randTheme = self.random_line(self.imageThemeFile)
         dirRandTheme = 'images/'+randTheme+'/'
-        for g in range(self.gridsize):
-            fnGridImage = self.random_line(dirRandTheme+randTheme+'.txt')
-            self.fnGridImageList[g] = dirRandTheme+fnGridImage#.append(dirRandTheme+fnGridImage)
+        #for g in range(self.gridsize):
+        while (len(self.fnGridImageList) < self.gridsize):
+            fnGridImage = self.random_line2(dirRandTheme+randTheme+'.txt',self.fnGridImArr)
+            self.fnGridImArr.append(fnGridImage)
+            self.fnGridImageList.append(dirRandTheme+fnGridImage) #[g] = dirRandTheme+fnGridImage
             if(self.debug):
-                print(self.fnGridImageList[g])   #debug
+                g = len(self.fnGridImageList) 
+                print(self.fnGridImageList[g-1])   #debug  [g]
         self.fnGridImage0 = self.fnGridImageList[0]
         self.fnGridImage1 = self.fnGridImageList[1]
         self.fnGridImage2 = self.fnGridImageList[2]
@@ -234,6 +232,7 @@ class GameApp(App):
             self.fnGridImage14 = self.fnGridImageList[14]
             self.fnGridImage15 = self.fnGridImageList[15]
     
+
     def collectQuestions(self):
         self.questionsList = [[]]
         self.randLineList = []
@@ -247,13 +246,15 @@ class GameApp(App):
         self.jackSq = 0
         if self.gridsize > 4:
             self.jackSq = random.randint(1, self.gridsize)
-        for g in range(self.gridsize):
-            randLine = self.random_line(self.singleWordFileName)
+       # for g in range(self.gridsize):
+        while (len(self.randLineList) < self.gridsize):
+            randLine = self.random_line2(self.singleWordFileName,self.randLineList)
             equivSum = self.mapLine(randLine)
             numSeq = self.pack_rand_vals_of_sum(equivSum)
             questions = self.get_all_quests_in_square(numSeq)
             if(self.debug):
                 print(questions)  #debug
+                print(randLine)
             self.questionsList.append(questions)
             self.randLineList.append(randLine)
             self.equivSumList.append(equivSum)
@@ -377,7 +378,7 @@ class GameApp(App):
         self.ansWord = False
         self.cnt +=1
         if (self.cnt > 5):
-            self.wrdTxt += "\n                            "
+            self.wrdTxt += "\n                     "
             self.cnt = 1
         self.wrdTxt +=  "  "+self.randLineList[self.currGrid-1]
         self.sumTxt = self.drvdSumTag
@@ -392,9 +393,9 @@ class GameApp(App):
     def endGame(self):
         self.screenName = self.doneScreenName 
         if (self.numSquareDone == self.gridsize):
-            self.questionkvString = """Congratulations! You're All Done!\nGrid Completion Time: """+str(int(self.endGrid-self.startGrid))+"\nTotal Points Earned: " +str(self.totalPoints)+"."
+            self.questionkvString = """Congratulations! You're All Done!\nCompletion Time: """+str(int((self.endGrid-self.startGrid)/60))+"mins\nPoints Earned: " +str(self.totalPoints)+"."
         else:
-            self.questionkvString = """Incomplete Grid!\nTotal Points Earned is """ +str(self.totalPoints)+"."
+            self.questionkvString = """Incomplete Grid!\nPoints Earned: """ +str(self.totalPoints)+"."
 
     def set_all_btn_Disabled(self,stvalue):
         self.btnDisabled = stvalue
@@ -463,6 +464,13 @@ class GameApp(App):
     def random_line(self,fn):
         fp = open(fn).read().splitlines()
         return random.choice(fp)
+
+    def random_line2(self,fn,workArr):
+        fp = open(fn).read().splitlines()
+        randChoice = random.choice(fp)
+        while (randChoice in workArr):
+            randChoice = random.choice(fp)
+        return randChoice
 
     def mapLine(self,oneLine):
         #fp = open("words.txt","r")
