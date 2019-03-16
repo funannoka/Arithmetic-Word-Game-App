@@ -48,15 +48,3 @@
 1. The game will be timed. Users are expected to complete a grid within a certain time limit.
 2. Users are expected to answer each question on each square block within a certain time limit.
 3. Once a user has exceeded a certain time frame, the user will not have an opportunity to gain double scores or jackpot.
-
-## Before Running
-
-1. Install python 3
-2. Install pip/pip3
-3. Install kivy (follow Instructions for your operating system, may be required to install pygame)
-4. Install all fonts located in directory 'fonts/' to your system (if not already installed)
-
-## Command to run
-
-> python3 wordgame.py (macOs)
-> python wordgame.py (windows)
