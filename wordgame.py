@@ -79,9 +79,15 @@ class WorkingScreen(Screen):
 
     pass
 
-class DoneScreen(Screen):
+class WorkingScreen4(Screen):
+    pass
+class WorkingScreen9(Screen):
+    pass
+class WorkingScreen16(Screen):
     pass
 
+class DoneScreen(Screen):
+    pass
 class ScreenManagement(ScreenManager):
     pass
 
@@ -110,6 +116,7 @@ class GameApp(App):
     jckptHeadTag = "Congratulations you've hit a jackpot!"
     jckptDefTag = "Your Bonus Point is 50 !"
     questionkvString = StringProperty()
+    selSentenString = StringProperty()
     errMsg = StringProperty()
     errDef = StringProperty()
     screenName = StringProperty()
@@ -169,6 +176,23 @@ class GameApp(App):
     bck15_color  = ListProperty()
     bck16_color  = ListProperty()
 
+    btn1Text = StringProperty()
+    btn2Text = StringProperty()
+    btn3Text = StringProperty()
+    btn4Text = StringProperty()
+    btn5Text = StringProperty()
+    btn6Text = StringProperty()
+    btn7Text = StringProperty()
+    btn8Text = StringProperty()
+    btn9Text = StringProperty()
+    btn10Text = StringProperty()
+    btn11Text = StringProperty()
+    btn12Text = StringProperty()
+    btn13Text = StringProperty()
+    btn14Text = StringProperty()
+    btn15Text = StringProperty()
+    btn16Text = StringProperty()
+
     
     def __init__(self, **kwargs):
         super(GameApp,self).__init__(**kwargs)
@@ -176,6 +200,8 @@ class GameApp(App):
         self.currGrid=1
         self.questionsList = [[]]
         self.randLineList = []
+        self.randLineList2 = []
+        self.randLineListWspace =[]
         self.equivSumList = [[]]
         self.fnGridImageList = []
         self.fnGridImArr = []
@@ -185,12 +211,16 @@ class GameApp(App):
         self.qpos = 0
         self.errMsg = ""
         self.errDef = ""
+        self.numSentence=0
+        self.reqNumSentence = 0
         self.sumTxt =  self.drvdSumTag
         self.wrdTxt =  self.drvdWrdTag
         self.ansWord = False
         self.screenName = self.workScreenName
         self.selGridScreen =""
         self.pointLabelTxt = "Total points: 0"
+        self.sStruct = ("subject","verb","determ","noun")
+        self.selSentenString = ""
         self.debug = 1
        # self.appwidth = 0  #debug
         #self.appheight=0   #debug
@@ -198,6 +228,13 @@ class GameApp(App):
         self.set_all_btn_Disabled(False)
         self.set_all_bck_color([1,1,1,1])
         self.fnGridImageList = ['']*16
+        self.wrdDict = dict(init="init")
+        #self.btnText = ['']*16
+        self.initAllBtnTxt()
+        self.mkSenten = False
+        self.foundSentences = []
+        self.numTries = 0
+        #self.rept = 0
        
 
     def collectGridImages(self):
@@ -232,6 +269,76 @@ class GameApp(App):
             self.fnGridImage14 = self.fnGridImageList[14]
             self.fnGridImage15 = self.fnGridImageList[15]
     
+    def collectQuestionsPlus(self):
+        self.questionsList = [[]]
+        self.randLineListWspace = []
+        self.randLineList = []
+        self.equivSumList = [[]]
+        self.randSentenceList = []
+        self.wrdDict.clear()
+        #self.sStruct = ("subject","verb","determ","noun")
+        #self.wrdTxt =  self.drvdWrdTag
+        self.sqPoints = 0 
+        self.qpos = 0
+        self.cnt = 0
+        if(self.debug):
+            print(self.gridsize)  #debug
+        self.jackSq = 0
+        if self.gridsize > 4:
+            self.jackSq = random.randint(1, self.gridsize)
+            if (self.gridsize > 9):
+                self.rept = 3
+            else:
+                self.rept = 2
+        else:
+            self.rept = 1
+        for n in range (self.rept):
+        #while (len(self.randSentenceList) < self.rept):
+            self.randSentenceList.append(self.randSentenceGenerator().split()) #not necessary
+        #for n in range (self.rept):
+            for i in range (len(self.randSentenceList[n])):
+               #self.randLineList2.append(self.randSentenceList[n][i])
+                self.randLineListWspace.append(self.randSentenceList[n][i])
+                self.wrdDict [self.randLineListWspace[i+(n*4)]] = self.sStruct[i]  
+        if(self.debug):
+            print(self.randLineListWspace)  #debug
+            print(self.wrdDict)
+
+        while (len(self.randLineListWspace) < self.gridsize):
+            self.randLineListWspace.append(' ')
+        if(self.debug):
+                print(self.randLineListWspace)
+        random.shuffle(self.randLineListWspace)
+        if(self.debug):
+                print("after shuffle: "+str(self.randLineListWspace))
+        for i in range (self.gridsize):
+            if(self.randLineListWspace[i] == ' '):
+                randLine = self.random_line(self.singleWordFileName)
+                self.randLineList.append(randLine)
+            else:
+                self.randLineList.append(self.randLineListWspace[i])
+            equivSum = self.mapLine(self.randLineList[i])
+            numSeq = self.pack_rand_vals_of_sum(equivSum)
+            questions = self.get_all_quests_in_square(numSeq)
+            if(self.debug):
+                print(questions)  #debug
+                print(self.randLineList[i])
+            self.questionsList.append(questions)
+            self.equivSumList.append(equivSum)
+        if(self.debug):
+            print("filled in: "+str(self.randLineList))
+        self.questionsList=self.questionsList[1:]
+        self.equivSumList=self.equivSumList[1:]
+        self.numSquareDone =0
+        self.startGrid = time.time()
+            
+    def randSentenceGenerator(self):
+        randVerb = self.random_line('words/verb.txt')
+        randNoun = self.random_line('words/'+randVerb+'-nouns.txt')
+        randSubject = self.random_line('words/subject.txt')
+        randDeterminer = self.random_line('words/determiner.txt')
+        randSentence =  randSubject+" "+randVerb+" "+randDeterminer+" "+randNoun
+        return randSentence
 
     def collectQuestions(self):
         self.questionsList = [[]]
@@ -261,6 +368,7 @@ class GameApp(App):
         self.questionsList=self.questionsList[1:]
         self.equivSumList=self.equivSumList[1:]
         self.numSquareDone =0
+        #self.collectQuestionsPlus()
         self.startGrid = time.time()
         #self.collectOneQuestion()
 
@@ -277,6 +385,31 @@ class GameApp(App):
         self.start = time.time()
         return self.questionkvString
 
+    def showBtnTxt (self,index):
+        self.btnText[index-1] = self.randLineList[index-1]
+        self.setAllBtnTxt()
+    
+    def setAllBtnTxt(self):
+        self.btn1Text = self.btnText[0]
+        self.btn2Text = self.btnText[1]
+        self.btn3Text = self.btnText[2]
+        self.btn4Text = self.btnText[3]
+        self.btn5Text = self.btnText[4]
+        self.btn6Text = self.btnText[5]
+        self.btn7Text = self.btnText[6]
+        self.btn8Text = self.btnText[7]
+        self.btn9Text = self.btnText[8]
+        self.btn10Text = self.btnText[9]
+        self.btn11Text = self.btnText[10]
+        self.btn12Text = self.btnText[11]
+        self.btn13Text = self.btnText[12]
+        self.btn14Text = self.btnText[13]
+        self.btn15Text = self.btnText[14]
+        self.btn16Text = self.btnText[15]
+
+    def initAllBtnTxt(self):
+        self.btnText = ['']*16
+        self.setAllBtnTxt()
 
     def collectAns(self):
         self.screenName = self.workScreenName
@@ -357,8 +490,13 @@ class GameApp(App):
 
     def reportSummary(self):
         self.totalPoints += self.sqPoints
-        self.pointLabelTxt = "Total points: "+str(self.totalPoints)        
-        if (self.ansWord == True):
+        self.pointLabelTxt = "Total points: "+str(self.totalPoints)  
+        if(self.mkSenten == True):
+            if(self.numSentence >= self.rept): #self.reqNumSentence
+                #self.endGrid = time.time()
+                self.foundSentences = []
+                self.endGame()
+        elif (self.ansWord == True):
             self.numSquareDone +=1
             self.endSquare()
         else:
@@ -383,15 +521,54 @@ class GameApp(App):
         self.wrdTxt +=  "  "+self.randLineList[self.currGrid-1]
         self.sumTxt = self.drvdSumTag
         if (self.numSquareDone == self.gridsize):
-            self.endGrid = time.time()
-            self.endGame()
+            #self.endGrid = time.time()
+            for i in range(len(self.randLineListWspace)):
+                self.btnText[i] = self.randLineListWspace[i]
+            self.setAllBtnTxt()
+            #self.randLineList = self.randLineListWspace[i]
+            self.screenName = self.wrkScreen
+            self.mkSenten = True
+            #self.endGame()
         else:
             self.screenName = self.selGridScreen 
             self.qpos =0
             self.sqPoints = 0
 
+    def checkSentence(self):
+        if(self.selSentenString in self.foundSentences): 
+            self.errMsg = "Sorry!"
+            self.errDef = "That sentence has already been found!"
+        else:
+            arrSentence = []
+            arrSentence = self.selSentenString.split() 
+            self.numSentence += 1
+            self.numTries += 1
+            for i in range(len(arrSentence)):
+                if(self.wrdDict[arrSentence[i]] != self.sStruct[i]):
+                    self.errMsg = self.incorrectTag
+                    self.errDef = "That is not a correct sentence!"
+                    self.numSentence -= 1
+                    break
+                else:
+                    self.errMsg = self.correctTag
+                    self.errDef = "That is a correct sentence!"
+            if(self.errMsg == self.correctTag):
+                self.foundSentences.append(self.selSentenString)
+                self.sqPoints = 200/self.numTries
+                self.numTries = 0
+                self.reportSummary()
+        self.selSentenString = ""
+        
+        # if(self.numSentence >= self.reqNumSentence):
+        #     #self.endGrid = time.time()
+        #     self.foundSentences = []
+        #     self.endGame()
+        
     def endGame(self):
+        self.endGrid = time.time()
+        self.mkSenten = False
         self.screenName = self.doneScreenName 
+        self.ansWord = False
         if (self.numSquareDone == self.gridsize):
             self.questionkvString = """Congratulations! You're All Done!\nCompletion Time: """+str(int((self.endGrid-self.startGrid)/60))+"mins\nPoints Earned: " +str(self.totalPoints)+"."
         else:
@@ -435,14 +612,17 @@ class GameApp(App):
         self.bck16_color  = val
         
 
-
     def restart(self):
         self.questionsList = [[]]
         self.randLineList = []
         self.equivSumList = [[]]
-        self.totalPoints=0
+        self.selSentenString = ""
+        self.foundSentences = []
+        self.numSentence = 0
+        self.totalPoints = 0
         self.sqPoints = 0 
         self.qpos = 0
+        self.ansWord = False
         self.questionkvString = "Solve: "
         self.wrdTxt =  self.drvdWrdTag
         self.sumTxt = self.drvdSumTag
