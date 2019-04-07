@@ -8,13 +8,14 @@ tea
 perfume
 cow
 smoke
+odor
 fire
 food
-flowers
+flower
 grass
 rose
-drink
 gasoline
+garden
 couch
 bleach
 onion
@@ -22,3 +23,4 @@ fruit
 banana
 pineapple
 sand
+scent

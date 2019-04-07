@@ -1,15 +1,16 @@
 #!/usr/bin/env python3
 
-#import kivy
+import kivy
 import random
 import cmd
 import sys
 import time
 import math
-import os
+import signal, os
 from kivy.app import App
 from kivy.base import runTouchApp
-#kivy.require("1.8.0")
+from kivy.core.window import Window
+kivy.require("1.10.1")
 from kivy.properties import StringProperty, AliasProperty, BooleanProperty,ListProperty
 from kivy.uix.label import Label
 from kivy.uix.button import Button
@@ -20,9 +21,17 @@ from kivy.uix.textinput import TextInput
 from kivy.uix.behaviors.button import ButtonBehavior
 from kivy.uix.popup import Popup
 from kivy.uix.scrollview import ScrollView
-#from kivy.logger import Logger
+from kivy.logger import Logger
 from kivy.uix.screenmanager import ScreenManager, Screen, FadeTransition
 from kivy.lang import Builder
+#import pyttsx3
+from gtts import gTTS 
+from pygame import mixer
+
+
+
+#Window.clearcolor = (0.5, 0.5, 0.5, 1)
+#Window.system_size = (600, 500) 
 
 alphaDict = {
   "A":0,"a":0,
@@ -57,6 +66,11 @@ alphaTuple = ("a","b","c","d","e","f","g","h","i","j","k",
               "l","m","n","o","p","q","r","s","t","u","v",
               "w","x","y","z")
 
+#sm =  ScreenManager()
+
+class ScreenManagement(ScreenManager):
+    pass
+
 
 class StartScreen(Screen):
     pass
@@ -73,9 +87,44 @@ class SelGrid9Screen(Screen):
 class SelGrid16Screen(Screen):
     pass
 
+class CntrlrCls():
+    def __init__(self, **kwargs):
+        super(CntrlrCls,self).__init__(**kwargs)
+        self.popon = 0
+        self.debug = 0
+        self.screenName = ""
+
+cntr = CntrlrCls()
+
+class MyPopup(Popup):
+    def __init__(self, **kwargs):
+        super(MyPopup,self).__init__(**kwargs)
+        Window.bind(on_key_down=self._on_keyboard_down)
+    
+    def _on_keyboard_down(self, instance, keyboard, keycode, text, modifiers):
+        if keycode == 40:  # 40 - Enter key pressed 
+            if(cntr.debug):
+                print("\n[POPUP] ENTER KEY DOWN")
+            self.dismiss()
+            #cntr.popon =0
+    pass
+
+
 class WorkingScreen(Screen):
-    # def __init__(self, **kwargs):
-    #     super(WorkingScreen,self).__init__(**kwargs)
+    def __init__(self, **kwargs):
+        super(WorkingScreen,self).__init__(**kwargs)
+        Window.bind(on_key_down=self._on_keyboard_down)
+        self.screenName = ""
+
+    def _on_keyboard_down(self, instance, keyboard, keycode, text, modifiers):
+        if keycode == 40 and cntr.popon ==0:  # 40 - Enter key pressed 
+            if (cntr.screenName == "work") or (self.screenName == "work"):
+                if(cntr.debug):
+                    print("""[WORK SCREEN] Button = {txt}\n[WORK SCREEN] ENTER KEY DOWN""".format(txt=self.ids.entr.text))
+                self.ids.entr.trigger_action(duration=0.2)
+                cntr.popon = 1
+                self.screenName = ""
+           # MyPopup.dismiss
 
     pass
 
@@ -88,9 +137,9 @@ class WorkingScreen16(Screen):
 
 class DoneScreen(Screen):
     pass
-class ScreenManagement(ScreenManager):
-    pass
 
+# class ScreenManager(ScreenManager):
+#     pass
 
 
 class GameApp(App):
@@ -196,6 +245,7 @@ class GameApp(App):
     
     def __init__(self, **kwargs):
         super(GameApp,self).__init__(**kwargs)
+        #Window.bind(on_key_down=self._on_keyboard_down)
         self.gridsize = 4
         self.currGrid=1
         self.questionsList = [[]]
@@ -216,12 +266,15 @@ class GameApp(App):
         self.sumTxt =  self.drvdSumTag
         self.wrdTxt =  self.drvdWrdTag
         self.ansWord = False
-        self.screenName = self.workScreenName
+        self.screenName = ""#self.workScreenName
+        cntr.screenName = self.screenName
         self.selGridScreen =""
         self.pointLabelTxt = "Total points: 0"
         self.sStruct = ("subject","verb","determ","noun")
         self.selSentenString = ""
-        self.debug = 1
+        self.debug = cntr.debug
+        self.endsq = 0
+        self.firstQuest = 1
        # self.appwidth = 0  #debug
         #self.appheight=0   #debug
         #self.makeMapTable()
@@ -234,8 +287,60 @@ class GameApp(App):
         self.mkSenten = False
         self.foundSentences = []
         self.numTries = 0
-        #self.rept = 0
+        self.mp3cnt =0
+        #self.initTTSpyttsx()
+        #self.initgTTS()
+        #self.del_all_mp3_files()
        
+    # def initTTSpyttsx(self):
+    #     self.engine = pyttsx3.init()
+    #     self.rate = self.engine.getProperty('rate')
+    #     self.engine.setProperty('rate', self.rate-80)
+       
+       
+    # def textToSpeech(self):
+    #     self.engine.say(self.questionkvString)
+    #     self.engine.runAndWait()
+
+    def initgTTS (self):
+        #mytext = 'Welcome'
+        mixer.init()
+        self.language = 'en'
+        #self.myobj = gTTS(text=mytext, lang=self.language, slow=False)  
+        #self.myobj.save("gTTSspeech.mp3") 
+        #os.system("gTTSspeech.mp3") 
+    
+    def textToSpeechgTTS(self):
+        if(self.questionkvString != ""):
+            self.myobj = gTTS(text=self.questionkvString, lang=self.language, slow=False)  
+            self.myobj.save("gTTSspeech"+str(self.mp3cnt)+".mp3") 
+            #os.system("gTTSspeech.mp3") #os.system("mpg321 gTTSspeech.mp3 -quiet")
+            mixer.music.load("gTTSspeech"+str(self.mp3cnt)+".mp3")
+            mixer.music.play()
+            self.mp3cnt +=1
+    
+    def kill_by_process_name_shell(self):
+        #os.system("Taskkill /IM "+name+" /F")
+        #mixer.quit()
+        for i in range (self.mp3cnt-1):
+            try:
+                os.remove("gTTSspeech"+str(i)+".mp3") 
+            except:
+                print("Error while deleting file ", "gTTSspeech"+str(i)+".mp3")
+            #os.remove("gTTSspeech"+str(i)+".mp3") 
+        self.mp3cnt = 0
+    
+    def del_all_mp3_files(self):
+        for fname in os.listdir('.'):
+            if fname.endswith('.mp3'):
+                if(self.debug):
+                    print(fname)
+                try:
+                    os.remove(fname)
+                except:
+                    print("Error while deleting file ", fname)
+                else:
+                    Logger.info('File removed: '+fname)
 
     def collectGridImages(self):
         self.fnGridImageList = []
@@ -269,7 +374,7 @@ class GameApp(App):
             self.fnGridImage14 = self.fnGridImageList[14]
             self.fnGridImage15 = self.fnGridImageList[15]
     
-    def collectQuestionsPlus(self):
+    def collectQuestionsPlus_deprc(self):
         self.questionsList = [[]]
         self.randLineListWspace = []
         self.randLineList = []
@@ -339,12 +444,95 @@ class GameApp(App):
         randDeterminer = self.random_line('words/determiner.txt')
         randSentence =  randSubject+" "+randVerb+" "+randDeterminer+" "+randNoun
         return randSentence
+    
+    def collectQuestionsPlus(self):
+        self.questionsList = [[]]
+        self.wrdTxt =  self.drvdWrdTag
+        self.randLineListWspace = []
+        self.randLineList = []
+        self.equivSumList = [[]]
+        self.randSentenceList = []
+        self.wrdDict.clear()
+        self.sqPoints = 0 
+        self.qpos = 0
+        self.cnt = 0
+        if(self.debug):
+            print(self.gridsize)  #debug
+        self.jackSq = 0
+        if self.gridsize > 4:
+            self.jackSq = random.randint(1, self.gridsize)
+        self.randLineListWspace = self.collectWrdsRandSentenceGen()
+        if(self.debug):
+            print(self.randLineListWspace)  #debug
+            print(self.wrdDict)
+        while (len(self.randLineListWspace) < self.gridsize):
+            self.randLineListWspace.append(' ')
+        if(self.debug):
+                print(self.randLineListWspace)
+        random.shuffle(self.randLineListWspace)
+        if(self.debug):
+                print("after shuffle: "+str(self.randLineListWspace))
+        for i in range (self.gridsize):
+            if(self.randLineListWspace[i] == ' '):
+                randLine = self.random_line(self.singleWordFileName)
+                self.randLineList.append(randLine)
+            else:
+                self.randLineList.append(self.randLineListWspace[i])
+            equivSum = self.mapLine(self.randLineList[i])
+            numSeq = self.pack_rand_vals_of_sum(equivSum)
+            questions = self.get_all_quests_in_square(numSeq)
+            if(self.debug):
+                print(questions)  #debug
+                print(self.randLineList[i])
+            self.questionsList.append(questions)
+            self.equivSumList.append(equivSum)
+        if(self.debug):
+            print("filled in: "+str(self.randLineList))
+        self.questionsList=self.questionsList[1:]
+        self.equivSumList=self.equivSumList[1:]
+        self.numSquareDone =0
+        self.initgTTS()
+        self.startGrid = time.time()
 
+    def collectWrdsRandSentenceGen(self):
+        randVerbList = []
+        randNounList = []
+        randDetList = []
+        randSubList = []
+        sentenceWrdArr = []
+        randtheme = self.random_line('words/theme.txt')
+        if (self.gridsize > 9):
+            cnt = 6
+            cnt2 = 2
+        elif (self.gridsize > 4):
+            cnt = 3
+            cnt2 = 1
+        else:
+            cnt = 1
+            cnt2 = 1
+        for i in range (cnt):
+            randVerbList.append(self.random_line2('words/'+randtheme+'-verbs.txt',randVerbList))
+            randNounList.append(self.random_line2('words/'+randtheme+'-nouns.txt',randNounList))
+            self.wrdDict[randVerbList[i]] = self.sStruct[1] 
+            self.wrdDict[randNounList[i]] = self.sStruct[3]  
+        for i in range (cnt2):
+            randDetList.append(self.random_line2('words/determiner.txt',randDetList))
+            randSubList.append(self.random_line2('words/subject.txt',randSubList))
+            self.wrdDict[randDetList[i]] = self.sStruct[2] 
+            self.wrdDict[randSubList[i]] = self.sStruct[0]  
+        for i in range(len(randVerbList)):
+            sentenceWrdArr.append(randVerbList[i])
+            sentenceWrdArr.append(randNounList[i])
+        for i in range(len(randDetList)):
+            sentenceWrdArr.append(randDetList[i])
+            sentenceWrdArr.append(randSubList[i])
+        return sentenceWrdArr
+            
     def collectQuestions(self):
         self.questionsList = [[]]
         self.randLineList = []
         self.equivSumList = [[]]
-        #self.wrdTxt =  self.drvdWrdTag
+        self.wrdTxt =  self.drvdWrdTag
         self.sqPoints = 0 
         self.qpos = 0
         self.cnt = 0
@@ -380,11 +568,41 @@ class GameApp(App):
             self.questionkvString = "Init"
         else:
             self.questionkvString = self.questionsList[self.currGrid-1][self.qpos]
+        if  self.firstQuest == 1:
+            if(self.debug):
+                print(self.questionkvString)  #debug
+            self.start = time.time()
+            self.firstQuest = 0
+            return self.questionkvString
+        else:
+            if (self.endsq == 1):
+                if(self.debug):
+                    print(self.questionkvString)  #debug
+                self.endsq = 0
+                self.start = time.time()
+
+
+    def returnQuestion(self):
         if(self.debug):
             print(self.questionkvString)  #debug
+        #cntr.popon =0
         self.start = time.time()
-        return self.questionkvString
+        return self.questionkvString,self.textToSpeechgTTS(),self.chngCntr(1) #app.textToSpeech() 
 
+    def handler(self, signum, frame):
+        if (self.debug):
+            print ('Signal handler called with signal', signum)
+        cntr.popon = 0
+        #raise IOError("Couldn't open device!")
+
+
+    def chngCntr(self,t):
+        #cntr.popon = 0
+        # Set the signal handler and a 2-second alarm
+        signal.signal(signal.SIGALRM, self.handler)
+        signal.alarm(t)
+
+    
     def showBtnTxt (self,index):
         self.btnText[index-1] = self.randLineList[index-1]
         self.setAllBtnTxt()
@@ -413,6 +631,7 @@ class GameApp(App):
 
     def collectAns(self):
         self.screenName = self.workScreenName
+        cntr.screenName = self.screenName
         self.timeElapsed = 0
         self.timeElapsed = time.time() - self.start
         #print("width = "+str(self.appwidth))   #debug
@@ -423,6 +642,9 @@ class GameApp(App):
             except(TypeError):
                 self.errMsg= self.invalidEntryTag
                 self.errDef= self.enterAlphaTag
+            except(ValueError):
+                self.errMsg=self.invalidEntryTag
+                self.errDef=self.enterAlphaTag
             else:
                 try:
                     ansSum = self.mapLine(ans)
@@ -430,9 +652,13 @@ class GameApp(App):
                     self.errMsg=self.invalidEntryTag
                     self.errDef= self.enterAlphaTag
                 else:
-                    if(self.debug):
-                        print("YAY" + str(ans))   #debug
-                    self.checkAns(ansSum)
+                    if ans == "":
+                        self.errMsg=self.invalidEntryTag
+                        self.errDef=self.enterAlphaTag
+                    else:
+                        if(self.debug):
+                            print("YAY" + str(ans))   #debug
+                        self.checkAns(ansSum)
         else:
             try:
                 ans = int(self.ans_ent)
@@ -470,7 +696,7 @@ class GameApp(App):
                 self.errDef = self.ansTag+self.randLineList[self.currGrid-1]
                 self.sqPoints += 10
         elif (self.timeElapsed > (maxTime))and(ans != self.equivSumList[self.currGrid-1][self.qpos]): 
-            self.errMsg = self.correctTag 
+            self.errMsg = self.incorrectTag 
             self.errDef = self.timeExceedTag+self.ansTag+str(self.equivSumList[self.currGrid-1][self.qpos]) 
         elif (self.timeElapsed > (maxTime)):
             self.errMsg = self.correctTag
@@ -492,7 +718,8 @@ class GameApp(App):
         self.totalPoints += self.sqPoints
         self.pointLabelTxt = "Total points: "+str(self.totalPoints)  
         if(self.mkSenten == True):
-            if(self.numSentence >= self.rept): #self.reqNumSentence
+            if((self.numSentence >= self.gridsize)|
+            ((self.numSentence == 1)&(self.gridsize == 4))): #self.reqNumSentence
                 #self.endGrid = time.time()
                 self.foundSentences = []
                 self.endGame()
@@ -501,11 +728,13 @@ class GameApp(App):
             self.endSquare()
         else:
             self.screenName = self.workScreenName
+            cntr.screenName = self.screenName
             self.sumTxt +=  "  "+str(self.equivSumList[self.currGrid-1][self.qpos-1])
             if (self.qpos not in range(len(self.questionsList[self.currGrid-1]))):
                 self.askWord()
             else:
                 self.collectOneQuestion()
+            #self.textToSpeech()
 
     def askWord(self):
         self.ansWord = True
@@ -520,6 +749,7 @@ class GameApp(App):
             self.cnt = 1
         self.wrdTxt +=  "  "+self.randLineList[self.currGrid-1]
         self.sumTxt = self.drvdSumTag
+        self.questionkvString = ""
         if (self.numSquareDone == self.gridsize):
             #self.endGrid = time.time()
             for i in range(len(self.randLineListWspace)):
@@ -527,10 +757,13 @@ class GameApp(App):
             self.setAllBtnTxt()
             #self.randLineList = self.randLineListWspace[i]
             self.screenName = self.wrkScreen
+            cntr.screenName = self.screenName
             self.mkSenten = True
             #self.endGame()
         else:
             self.screenName = self.selGridScreen 
+            cntr.screenName = self.screenName
+            self.endsq = 1
             self.qpos =0
             self.sqPoints = 0
 
@@ -566,13 +799,15 @@ class GameApp(App):
         
     def endGame(self):
         self.endGrid = time.time()
+        self.firstQuest = 1
         self.mkSenten = False
         self.screenName = self.doneScreenName 
+        cntr.screenName = self.screenName
         self.ansWord = False
         if (self.numSquareDone == self.gridsize):
-            self.questionkvString = """Congratulations! You're All Done!\nCompletion Time: """+str(int((self.endGrid-self.startGrid)/60))+"mins\nPoints Earned: " +str(self.totalPoints)+"."
+            self.questionkvString = "Congratulations! You're All Done!\nCompletion Time: "+str(int((self.endGrid-self.startGrid)/60))+"mins\nPoints Earned: " +str(self.totalPoints)+"."
         else:
-            self.questionkvString = """Incomplete Grid!\nPoints Earned: """ +str(self.totalPoints)+"."
+            self.questionkvString = "Incomplete Grid!\nPoints Earned: " +str(self.totalPoints)+"."
 
     def set_all_btn_Disabled(self,stvalue):
         self.btnDisabled = stvalue
@@ -627,6 +862,9 @@ class GameApp(App):
         self.wrdTxt =  self.drvdWrdTag
         self.sumTxt = self.drvdSumTag
         self.pointLabelTxt = "Total Points: 0"
+        mixer.quit()
+        self.del_all_mp3_files()
+        #self.kill_by_process_name_shell()
 
     def makeMapTable(self):
         for i in range (13):
@@ -692,11 +930,13 @@ class GameApp(App):
         numStrList = numStrList[1:]
         return numStrList
 
-    
+    def on_stop(self):
+        mixer.quit()
+        self.del_all_mp3_files()
+        
     def build(self):
-        presentation = Builder.load_file("wordGame.kv")
-
-        return presentation
+        self.presentation = Builder.load_file("wordGame.kv")
+        return self.presentation
 
 
 
@@ -704,3 +944,4 @@ class GameApp(App):
 
 if __name__ == "__main__":
     GameApp().run()
+    mixer.quit()

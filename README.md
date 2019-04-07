@@ -41,7 +41,7 @@
 1. Each square of the grid is assigned a score.
 2. Squares are assigned points directly proportional to their level of difficulty. Difficult squares are worth more points.
 3. No points are given for incorrect answers.
-4. There are chances of double scores and jackpot on randomly selected grids. This is only available to users playing the game at            level 2 (9 squares) and higher.
+4. There are chances of double scores and jackpot on randomly selected grids. This is only available to users playing the game at level 2 (9 squares) and higher.
 
 ## Time
 

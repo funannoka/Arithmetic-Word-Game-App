@@ -35,12 +35,17 @@ ScreenManagement:
     color: 1,0,0,1
 
 
-
-<MyPopup@Popup>:
+<MyPopup>:
+    #Popup:
+    id:popup
     title: app.errMsg #'Feedback Window'
     halign: 'center'
     #content:
     size_hint:0.3,0.25
+    on_dismiss:
+        app.returnQuestion()
+        # app.textToSpeechgTTS()#app.textToSpeech() 
+        #cntr.popon =0
     #size: 400,400
     #auto_dismiss: False
     Label:
@@ -143,6 +148,8 @@ ScreenManagement:
 
 <SelGridScreen>:
     name: "sgrid"
+    #on_leave: 
+    #    app.textToSpeechgTTS()
     FloatLayout:
         #TotalPointsLabel
         Button:
@@ -825,13 +832,21 @@ ScreenManagement:
 
 <WorkingScreen>:
     name: "work"
+    on_enter: 
+        #app.textToSpeech()
+        root.screenName = "work"
+        app.textToSpeechgTTS()
+        #self.teststuff()
+        #app.engine.runAndWait()
+    # _on_keyboard_down: 
+    #     trig_fnc = entr.trigger_action() 
     ScrollView:
         #orientation: "horizontal"
         size_hint:1, None
         size: root.width, root.height  
         #bar_width: 4
         FloatLayout:
-            TotalPointsLabel    
+            TotalPointsLabel
             Label:
                 text: app.questionkvString
                 font_name: 'georgia.ttf'#'6809 chargen.ttf'
@@ -864,7 +879,9 @@ ScreenManagement:
                 pos_hint:{'center_x':0.15, 'center_y':0.4}
                 multiline: False
                 background_color: 1, 1, 0.6, 1   #171, 183, 183, 1 #rgba(103, 128, 159, 1)
+                #_on_keyboard_down: entr.trigger_action()
             Button:
+                id: entr
                 on_release: 
                     app.ans_ent = tinput.text
                     tinput.text = ""
@@ -876,6 +893,7 @@ ScreenManagement:
                     #app.start = time.time()
                    # app.showBtnTxt(app.currGrid)
                     app.root.current = app.screenName
+                    # app.textToSpeech() 
                 text: "Enter"
                 font_name: '6809 chargen.ttf'
                 markup: True
@@ -894,6 +912,7 @@ ScreenManagement:
             Button:
                 on_release:
                     app.endGame()
+                    app.returnQuestion()
                     app.root.current = "done"
                 text: "Quit"
                 font_size:25  
@@ -913,7 +932,7 @@ ScreenManagement:
             font_name: '6809 chargen.ttf'
             markup: True
             font_size: root.width*0.0225 
-            pos_hint:{'center_x':0.45, 'center_y':0.75}
+            pos_hint:{'center_x':0.48, 'center_y':0.75}
             size_hint_y: None
             text_size: 280,None  
             height: self.texture_size[1]  
@@ -930,7 +949,7 @@ ScreenManagement:
             markup: True
             font_size:root.width*0.0188 #15   
             size: self.texture_size
-            pos_hint:{'center_x':0.504, 'center_y':0.25}  
+            pos_hint:{'center_x':0.51, 'center_y':0.25}  
             size_hint:0.125,0.07 
             color: 1,0,1,1
         Button:
@@ -939,8 +958,8 @@ ScreenManagement:
                 #app.currGrid = 1 
                 #app.collectOneQuestion()
                 #app.selGridScreen ="s9grid"
-                # app.btnDisabled = True
-                # app.bck_color = 1,1,1,0.2
+                #app.btnDisabled = True
+                #app.bck_color = 1,1,1,0.2
                 app.selSentenString += " "+app.btn1Text
                 app.root.current = app.screenName
             text: app.btn1Text
@@ -948,7 +967,7 @@ ScreenManagement:
             font_name: 'ARCADE.TTF' 
             markup: True 
             color: 1,1,1,1
-            #background_color: app.bck_color 
+            background_color: 1,1,1,0.4 #app.bck_color 
             background_normal: app.fnGridImage0 
             #disabled: app.btnDisabled
             #background_disabled_normal: app.fnGridImage0 
@@ -969,7 +988,7 @@ ScreenManagement:
             font_name: 'ARCADE.TTF' 
             markup: True 
             color: 1,1,1,1
-            #background_color: app.bck2_color 
+            background_color: 1,1,1,0.4#app.bck2_color 
             background_normal: app.fnGridImage1 
             #disabled: app.btn2Disabled
             #background_disabled_normal: app.fnGridImage1 
@@ -990,7 +1009,7 @@ ScreenManagement:
             font_name: 'ARCADE.TTF' 
             markup: True 
             color: 1,1,1,1
-            #background_color: app.bck3_color 
+            background_color: 1,1,1,0.4#app.bck3_color 
             background_normal: app.fnGridImage2 
             #disabled: app.btn3Disabled
             #background_disabled_normal: app.fnGridImage2 
@@ -1011,7 +1030,7 @@ ScreenManagement:
             font_name: 'ARCADE.TTF' 
             markup: True 
             color: 1,1,1,1
-            #background_color: app.bck4_color 
+            background_color: 1,1,1,0.4#app.bck4_color 
             background_normal: app.fnGridImage3 
             #disabled: app.btn4Disabled
             #background_disabled_normal: app.fnGridImage3 
@@ -1025,7 +1044,7 @@ ScreenManagement:
             font_size:25  
             font_name: 'ARCADE.TTF' 
             markup: True
-            pos_hint:{'center_x':0.629, 'center_y':0.25}  #0.05
+            pos_hint:{'center_x':0.635, 'center_y':0.25}  #0.05
             size_hint:0.125,0.07 
             color:1,0,1,1
         Button:
@@ -1081,7 +1100,7 @@ ScreenManagement:
             font_name: 'ARCADE.TTF' 
             markup: True 
             color: 1,1,1,1
-            #background_color: app.bck_color 
+            background_color: 1,1,1,0.4#app.bck_color 
             background_normal: app.fnGridImage0 
             #disabled: app.btnDisabled
             #background_disabled_normal: app.fnGridImage0 
@@ -1097,7 +1116,7 @@ ScreenManagement:
             font_name: 'ARCADE.TTF' 
             markup: True 
             color: 1,1,1,1
-            #background_color: app.bck2_color 
+            background_color: 1,1,1,0.4#app.bck2_color 
             background_normal: app.fnGridImage1 
             #disabled: app.btn2Disabled
             #background_disabled_normal: app.fnGridImage1 
@@ -1113,7 +1132,7 @@ ScreenManagement:
             font_name: 'ARCADE.TTF' 
             markup: True 
             color: 1,1,1,1
-            #background_color: app.bck3_color 
+            background_color: 1,1,1,0.4#app.bck3_color 
             background_normal: app.fnGridImage2 
             #disabled: app.btn3Disabled
             #background_disabled_normal: app.fnGridImage2 
@@ -1129,7 +1148,7 @@ ScreenManagement:
             font_name: 'ARCADE.TTF' 
             markup: True 
             color: 1,1,1,1
-            #background_color: app.bck4_color 
+            background_color: 1,1,1,0.4#app.bck4_color 
             background_normal: app.fnGridImage3 
             #disabled: app.btn4Disabled
             #background_disabled_normal: app.fnGridImage3 
@@ -1145,7 +1164,7 @@ ScreenManagement:
             font_name: 'ARCADE.TTF' 
             markup: True 
             color: 1,1,1,1
-            #background_color: app.bck5_color 
+            background_color: 1,1,1,0.4#app.bck5_color 
             background_normal: app.fnGridImage4 
             #disabled: app.btn5Disabled
             #background_disabled_normal: app.fnGridImage4 
@@ -1161,7 +1180,7 @@ ScreenManagement:
             font_name: 'ARCADE.TTF' 
             markup: True 
             color: 1,1,1,1
-            #background_color: app.bck6_color 
+            background_color: 1,1,1,0.4#app.bck6_color 
             background_normal: app.fnGridImage5 
             #disabled: app.btn6Disabled
             #background_disabled_normal: app.fnGridImage5 
@@ -1177,7 +1196,7 @@ ScreenManagement:
             font_name: 'ARCADE.TTF' 
             markup: True 
             color: 1,1,1,1
-            #background_color: app.bck7_color 
+            background_color: 1,1,1,0.4#app.bck7_color 
             background_normal: app.fnGridImage6 
             #disabled: app.btn7Disabled
             #background_disabled_normal: app.fnGridImage6 
@@ -1193,7 +1212,7 @@ ScreenManagement:
             font_name: 'ARCADE.TTF' 
             markup: True 
             color: 1,1,1,1
-            #background_color: app.bck8_color 
+            background_color: 1,1,1,0.4#app.bck8_color 
             background_normal: app.fnGridImage7 
             #disabled: app.btn8Disabled
             #background_disabled_normal: app.fnGridImage7 
@@ -1209,7 +1228,7 @@ ScreenManagement:
             font_name: 'ARCADE.TTF' 
             markup: True 
             color: 1,1,1,1
-            #background_color: app.bck9_color 
+            background_color: 1,1,1,0.4#app.bck9_color 
             background_normal: app.fnGridImage8 
             #disabled: app.btn9Disabled
             #background_disabled_normal: app.fnGridImage8 
@@ -1279,7 +1298,7 @@ ScreenManagement:
             font_name: 'ARCADE.TTF' 
             markup: True 
             color: 1,1,1,1
-            #background_color: app.bck_color 
+            background_color: 1,1,1,0.4#app.bck_color 
             background_normal: app.fnGridImage0 
             #disabled: app.btnDisabled
             #background_disabled_normal: app.fnGridImage0 
@@ -1295,7 +1314,7 @@ ScreenManagement:
             font_name: 'ARCADE.TTF' 
             markup: True 
             color: 1,1,1,1
-            #background_color: app.bck2_color 
+            background_color: 1,1,1,0.4#app.bck2_color 
             background_normal: app.fnGridImage1 
             #disabled: app.btn2Disabled
             #background_disabled_normal: app.fnGridImage1 
@@ -1311,7 +1330,7 @@ ScreenManagement:
             font_name: 'ARCADE.TTF' 
             markup: True 
             color: 1,1,1,1
-            #background_color: app.bck3_color 
+            background_color: 1,1,1,0.4#app.bck3_color 
             background_normal: app.fnGridImage2 
             #disabled: app.btn3Disabled
             #background_disabled_normal: app.fnGridImage2 
@@ -1327,7 +1346,7 @@ ScreenManagement:
             font_name: 'ARCADE.TTF' 
             markup: True 
             color: 1,1,1,1
-            #background_color: app.bck4_color 
+            background_color: 1,1,1,0.4#app.bck4_color 
             background_normal: app.fnGridImage3 
             #disabled: app.btn4Disabled
             #background_disabled_normal: app.fnGridImage3 
@@ -1343,7 +1362,7 @@ ScreenManagement:
             font_name: 'ARCADE.TTF' 
             markup: True 
             color: 1,1,1,1
-            #background_color: app.bck5_color 
+            background_color: 1,1,1,0.4#app.bck5_color 
             background_normal: app.fnGridImage4 
             #disabled: app.btn5Disabled
             #background_disabled_normal: app.fnGridImage4 
@@ -1359,9 +1378,9 @@ ScreenManagement:
             font_name: 'ARCADE.TTF' 
             markup: True 
             color: 1,1,1,1
-            #background_color: app.bck6_color 
+            background_color: 1,1,1,0.4#app.bck6_color 
             background_normal: app.fnGridImage5 
-           # disabled: app.btn6Disabled
+            #disabled: app.btn6Disabled
             #background_disabled_normal: app.fnGridImage5 
             pos_hint:{'center_x':0.4+0.15-0.075-0.075, 'center_y':0.6-0.2+0.1+0.1-0.07+0.05} 
             size_hint:0.15,0.15 
@@ -1375,7 +1394,7 @@ ScreenManagement:
             font_name: 'ARCADE.TTF' 
             markup: True 
             color: 1,1,1,1
-            #background_color: app.bck7_color 
+            background_color: 1,1,1,0.4#app.bck7_color 
             background_normal: app.fnGridImage6 
             #disabled: app.btn7Disabled
             #background_disabled_normal: app.fnGridImage6 
@@ -1391,7 +1410,7 @@ ScreenManagement:
             font_name: 'ARCADE.TTF' 
             markup: True 
             color: 1,1,1,1
-            #background_color: app.bck8_color 
+            background_color: 1,1,1,0.4#app.bck8_color 
             background_normal: app.fnGridImage7 
             #disabled: app.btn8Disabled
             #background_disabled_normal: app.fnGridImage7 
@@ -1407,7 +1426,7 @@ ScreenManagement:
             font_name: 'ARCADE.TTF' 
             markup: True 
             color: 1,1,1,1
-            #background_color: app.bck9_color 
+            background_color: 1,1,1,0.4#app.bck9_color 
             background_normal: app.fnGridImage8 
             #disabled: app.btn9Disabled
             #background_disabled_normal: app.fnGridImage8 
@@ -1423,7 +1442,7 @@ ScreenManagement:
             font_name: 'ARCADE.TTF' 
             markup: True 
             color: 1,1,1,1
-            #background_color: app.bck10_color 
+            background_color: 1,1,1,0.4#app.bck10_color 
             background_normal: app.fnGridImage9 
             #disabled: app.btn10Disabled
             #background_disabled_normal: app.fnGridImage9 
@@ -1439,7 +1458,7 @@ ScreenManagement:
             font_name: 'ARCADE.TTF' 
             markup: True 
             color: 1,1,1,1
-            #background_color: app.bck11_color 
+            background_color: 1,1,1,0.4#app.bck11_color 
             background_normal: app.fnGridImage10 
             #disabled: app.btn11Disabled
             #background_disabled_normal: app.fnGridImage10 
@@ -1455,7 +1474,7 @@ ScreenManagement:
             font_name: 'ARCADE.TTF' 
             markup: True 
             color: 1,1,1,1
-           #background_color: app.bck12_color 
+            background_color: 1,1,1,0.4#app.bck12_color 
             background_normal: app.fnGridImage11 
             #disabled: app.btn12Disabled
             #background_disabled_normal: app.fnGridImage11 
@@ -1471,7 +1490,7 @@ ScreenManagement:
             font_name: 'ARCADE.TTF' 
             markup: True 
             color: 1,1,1,1
-            #background_color: app.bck13_color 
+            background_color: 1,1,1,0.4#app.bck13_color 
             background_normal: app.fnGridImage12 
             #disabled: app.btn13Disabled
             #background_disabled_normal: app.fnGridImage12
@@ -1487,7 +1506,7 @@ ScreenManagement:
             font_name: 'ARCADE.TTF' 
             markup: True 
             color: 1,1,1,1
-            #background_color: app.bck14_color 
+            background_color: 1,1,1,0.4#app.bck14_color 
             background_normal: app.fnGridImage13 
             #disabled: app.btn14Disabled
             #background_disabled_normal: app.fnGridImage13
@@ -1503,7 +1522,7 @@ ScreenManagement:
             font_name: 'ARCADE.TTF' 
             markup: True 
             color: 1,1,1,1
-            #background_color: app.bck15_color 
+            background_color: 1,1,1,0.4#app.bck15_color 
             background_normal: app.fnGridImage14 
             #disabled: app.btn15Disabled
             #background_disabled_normal: app.fnGridImage14
@@ -1519,7 +1538,7 @@ ScreenManagement:
             font_name: 'ARCADE.TTF' 
             markup: True 
             color: 1,1,1,1
-            #background_color: app.bck16_color 
+            background_color: 1,1,1,0.4#app.bck16_color 
             background_normal: app.fnGridImage15 
             #disabled: app.btn16Disabled
             #background_disabled_normal: app.fnGridImage15
