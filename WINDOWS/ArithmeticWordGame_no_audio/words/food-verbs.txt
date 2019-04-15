@@ -1,0 +1,12 @@
+eat
+bake
+cook
+grill
+touch
+fry
+chew
+bite
+see
+lick
+cut
+roast
