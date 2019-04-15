@@ -1,0 +1,1618 @@
+#:kivy 1.10.1
+#file_name: wordgame.py
+
+#: import FadeTransition kivy.uix.screenmanager.FadeTransition
+#: import Label kivy.uix.label.Label
+#: import time time.time
+#: import Factory kivy.factory.Factory
+#: import TextInput kivy.uix.textinput.TextInput
+
+
+ScreenManagement:
+    transition: FadeTransition()
+    StartScreen:
+    SelLevelScreen:
+    SelGridScreen:
+    SelGrid9Screen:
+    SelGrid16Screen:
+    WorkingScreen:
+    WorkingScreen4:
+    WorkingScreen9:
+    WorkingScreen16:
+    DoneScreen:
+
+<TotalPointsLabel@Label>:
+    #FloatLayout:
+        #Label:
+    text: '[i]'+app.pointLabelTxt+'[/i]'
+    font_name: 'zorque.ttf'   # ARCADE.TTF
+    markup: True
+    font_size: 15
+    #pos: root.right-self.width-root.offset,root.top-self.height
+    pos_hint:{'center_x':0.85, 'center_y':0.9}  
+    #pos_hint:{'right':1, 'top':1}  
+    #size_hint:0.3,0.2 
+    color: 1,0,0,1
+
+
+<MyPopup>:
+    #Popup:
+    id:popup
+    title: app.errMsg #'Feedback Window'
+    halign: 'center'
+    #content:
+    size_hint:0.3,0.25
+    on_dismiss:
+        app.returnQuestion()
+        # app.textToSpeechgTTS()#app.textToSpeech() 
+        #cntr.popon =0
+    #size: 400,400
+    #auto_dismiss: False
+    Label:
+        text:app.errDef
+
+#<MyPopupt@Popup>:
+#     auto_dismiss: False
+#     Button:
+#         text:'Close'
+#         on_release:
+#             app.totalPoints += app.sqPoints
+#             Factory.MyPopup().dismiss()
+#             root.dismiss()
+
+
+<StartScreen>:
+    name: "start"
+    FloatLayout:
+        #TotalPointsLabel
+        Label:
+            text: 'Arithmetic Word Game'
+            font_name:  'neuropol x rg'    # ARCADE.TTF
+            markup: True
+            font_size: '40sp'
+            pos: root.right-self.width,root.top-self.height+(root.top/2.5)
+            #pos_hint:{'right':0.85, 'top':0.85}  
+            #size_hint:0.3,0.2 
+            color: 1,0,1,1
+
+        Button:   #ff3333  3333ff
+            id: btn
+            on_release: 
+                app.setAllBtnTxt()
+                app.root.current = "slevel"
+            text: u'[color=ffffff]Start [/color][color=ff3333][b]Game[/b][/color]'
+            font_name: '6809 chargen.ttf'
+            markup: True
+            unichr:2764
+            size: self.texture_size
+            font_size:'30sp'
+            pos_hint:{'right':0.645, 'top':0.645}  
+            size_hint:0.3,0.2 
+            #color: 1,0,1,1
+
+<SelLevelScreen>:
+    name: "slevel"
+    FloatLayout:
+        TotalPointsLabel
+        Button:
+            on_release:
+                app.gridsize=4
+                app.reqNumSentence = 1
+                app.collectGridImages()
+                #app.collectQuestions() 
+                app.collectQuestionsPlus()
+                app.selGridScreen ="sgrid"
+                app.wrkScreen = "work4"
+                app.root.current = "sgrid"
+            text: "Level 1"
+            font_size:30   
+            font_name: 'ARCADE.TTF'
+            markup: True
+            pos_hint:{'x':0+0.04, 'top':0.645}   
+            size_hint:0.3,0.2 
+            color: 1,0,1,1
+        Button:
+            on_release: 
+                app.gridsize=9
+                app.reqNumSentence = 2
+                app.collectGridImages()
+                app.collectQuestionsPlus()
+                #app.collectQuestions() 
+                app.selGridScreen ="s9grid"
+                app.wrkScreen = "work9"
+                app.root.current = "s9grid"
+            text: "Level 2"
+            font_size:30  
+            font_name: 'ARCADE.TTF' 
+            markup: True
+            pos_hint:{'right':0.645, 'top':0.645}  
+            size_hint:0.3,0.2 
+            color: 1,0,1,1
+        Button:
+            on_release: 
+                app.gridsize=16
+                app.reqNumSentence = 3
+                app.collectGridImages()
+                app.collectQuestionsPlus()
+                app.selGridScreen ="s16grid"
+                app.wrkScreen = "work16"
+                #app.collectQuestions() 
+                app.root.current = "s16grid"
+            text: "Level 3"
+            font_size:30 
+            font_name: 'ARCADE.TTF' 
+            markup: True 
+            pos_hint:{'right':1-0.05, 'top':0.645}  
+            size_hint:0.3,0.2 
+            color: 1,0,1,1
+
+<SelGridScreen>:
+    name: "sgrid"
+    #on_leave: 
+    #    app.textToSpeechgTTS()
+    FloatLayout:
+        #TotalPointsLabel
+        Button:
+            id: b1
+            on_release: 
+                app.currGrid = 1
+                app.collectOneQuestion()
+                #app.selGridScreen ="sgrid"
+                app.btnDisabled = True
+                #app.appwidth = self.width  #debug
+                #app.appheight= self.height #debug
+                app.bck_color = 1,1,1,0.2
+                #app.showBtnTxt(1)
+                app.root.current = "work"
+            text: app.btn1Text
+            font_size:30 
+            font_name: 'ARCADE.TTF' 
+            markup: True 
+            color: 1,0,1,1
+            background_color: app.bck_color 
+            background_normal: app.fnGridImage0 
+            disabled: app.btnDisabled
+            background_disabled_normal: app.fnGridImage0 
+            pos_hint:{'center_x':0.4, 'center_y':0.4+0.2}  
+            size_hint:0.2,0.2     
+        Button:
+            id: b2
+            on_release: 
+                app.currGrid = 2
+                app.collectOneQuestion()
+                #app.selGridScreen ="sgrid"
+                app.bck2_color = 1,1,1,0.2
+                app.btn2Disabled = True
+                #app.showBtnTxt(2)
+                app.root.current = "work"
+            text: app.btn2Text
+            font_size:30 
+            font_name: 'ARCADE.TTF' 
+            markup: True 
+            color: 1,0,1,1
+            background_color: app.bck2_color
+            background_normal: app.fnGridImage1
+            disabled: app.btn2Disabled
+            background_disabled_normal: app.fnGridImage1#self.background_down
+            pos_hint:{'center_x':0.4+0.2, 'center_y':0.4+0.2} 
+            size_hint:0.2,0.2 
+        Button:
+            id: b3
+            on_release: 
+                app.currGrid = 3
+                app.collectOneQuestion()
+                #app.selGridScreen ="sgrid"
+                app.bck3_color = 1,1,1,0.2
+                app.btn3Disabled = True
+                #app.showBtnTxt(3)
+                app.root.current = "work"
+            text: app.btn3Text
+            font_size:30 
+            font_name: 'ARCADE.TTF' 
+            markup: True 
+            color: 1,0,1,1
+            background_color: app.bck3_color
+            disabled: app.btn3Disabled
+            background_disabled_normal: app.fnGridImage2#self.background_down
+            background_normal: app.fnGridImage2#app.bckgrndDefault3
+            pos_hint:{'center_x':0.4, 'center_y':0.6-0.2}  
+            size_hint:0.2,0.2 
+        Button:
+            id: b4
+            on_release: 
+                app.currGrid = 4
+                app.collectOneQuestion()
+                #app.selGridScreen ="sgrid"
+                app.bck4_color = 1,1,1,0.2
+                app.btn4Disabled = True
+                #app.showBtnTxt(4)
+                app.root.current = "work"
+            text: app.btn4Text
+            font_size:30 
+            font_name: 'ARCADE.TTF' 
+            markup: True 
+            color: 1,0,1,1
+            background_color: app.bck4_color
+            disabled: app.btn4Disabled
+            background_disabled_normal: app.fnGridImage3#self.background_down
+            background_normal: app.fnGridImage3#app.bckgrndDefault4
+            pos_hint:{'center_x':0.4+0.2, 'center_y':0.6-0.2} 
+            size_hint:0.2,0.2 
+        Button:
+            on_release: 
+                app.set_all_btn_Disabled(False)
+                app.set_all_bck_color([1,1,1,1])
+                app.initAllBtnTxt()
+                app.root.current = "slevel"
+            text: "Back"
+            font_size:25  
+            font_name: 'ARCADE.TTF' 
+            markup: True
+            pos_hint:{'center_x':0.1, 'center_y':0.95}  #0.05
+            size_hint:0.1,0.07 
+            color:1,0,1,1
+        Button:
+            on_release:
+                app.set_all_btn_Disabled(False)
+                app.set_all_bck_color([1,1,1,1])
+                app.initAllBtnTxt()
+                app.root.current = "start"
+            text: "Exit"
+            font_size:25  
+            font_name: 'ARCADE.TTF' 
+            markup: True
+            pos_hint:{'center_x':0.9, 'center_y':0.95} 
+            size_hint:0.1,0.07 
+            color:1,0,1,1
+
+
+<SelGrid9Screen>:
+    name: "s9grid"
+    FloatLayout:
+        #TotalPointsLabel
+        Button:
+            id: b1
+            on_release:
+                app.currGrid = 1 
+                app.collectOneQuestion()
+                app.selGridScreen ="s9grid"
+                #app.wrkScreen = "work9"
+                app.btnDisabled = True
+                app.bck_color = 1,1,1,0.2
+                app.root.current = "work"
+            text: app.btn1Text
+            font_size:30 
+            font_name: 'ARCADE.TTF' 
+            markup: True 
+            color: 1,0,1,1
+            background_color: app.bck_color 
+            background_normal: app.fnGridImage0 
+            disabled: app.btnDisabled
+            background_disabled_normal: app.fnGridImage0 
+            pos_hint:{'center_x':0.4-0.1, 'center_y':0.4+0.2+0.1}  
+            size_hint:0.2,0.2 
+        Button:
+            id: b2
+            on_release: 
+                app.currGrid = 2
+                app.collectOneQuestion()
+                app.selGridScreen ="s9grid"
+                app.btn2Disabled = True
+                app.bck2_color = 1,1,1,0.2
+                app.root.current = "work"
+            text: app.btn2Text
+            font_size:30 
+            font_name: 'ARCADE.TTF' 
+            markup: True 
+            color: 1,0,1,1
+            background_color: app.bck2_color 
+            background_normal: app.fnGridImage1 
+            disabled: app.btn2Disabled
+            background_disabled_normal: app.fnGridImage1 
+            pos_hint:{'center_x':0.4+0.2-0.1, 'center_y':0.4+0.2+0.1} 
+            size_hint:0.2,0.2 
+        Button:
+            id: b3
+            on_release:
+                app.currGrid = 3
+                app.collectOneQuestion()
+                app.selGridScreen ="s9grid" 
+                app.btn3Disabled = True
+                app.bck3_color = 1,1,1,0.2
+                app.root.current = "work"
+            text: app.btn3Text
+            font_size:30 
+            font_name: 'ARCADE.TTF' 
+            markup: True 
+            color: 1,0,1,1
+            background_color: app.bck3_color 
+            background_normal: app.fnGridImage2 
+            disabled: app.btn3Disabled
+            background_disabled_normal: app.fnGridImage2 
+            pos_hint:{'center_x':0.4+0.2+0.2-0.1, 'center_y':0.4+0.2+0.1}  
+            size_hint:0.2,0.2 
+        Button:
+            id: b4
+            on_release: 
+                app.currGrid = 4
+                app.collectOneQuestion()
+                app.selGridScreen ="s9grid"
+                app.btn4Disabled = True
+                app.bck4_color = 1,1,1,0.2
+                app.root.current = "work"
+            text: app.btn4Text
+            font_size:30 
+            font_name: 'ARCADE.TTF' 
+            markup: True 
+            color: 1,0,1,1
+            background_color: app.bck4_color 
+            background_normal: app.fnGridImage3 
+            disabled: app.btn4Disabled
+            background_disabled_normal: app.fnGridImage3 
+            pos_hint:{'center_x':0.4-0.1, 'center_y':0.6-0.2+0.1}  
+            size_hint:0.2,0.2 
+        Button:
+            id: b5
+            on_release: 
+                app.currGrid = 5
+                app.collectOneQuestion()
+                app.selGridScreen ="s9grid"
+                app.btn5Disabled = True
+                app.bck5_color = 1,1,1,0.2
+                app.root.current = "work"
+            text: app.btn5Text
+            font_size:30 
+            font_name: 'ARCADE.TTF' 
+            markup: True 
+            color: 1,0,1,1
+            background_color: app.bck5_color 
+            background_normal: app.fnGridImage4 
+            disabled: app.btn5Disabled
+            background_disabled_normal: app.fnGridImage4 
+            pos_hint:{'center_x':0.4+0.2-0.1, 'center_y':0.6-0.2+0.1} 
+            size_hint:0.2,0.2 
+        Button:
+            id: b6
+            on_release: 
+                app.currGrid = 6
+                app.collectOneQuestion()
+                app.selGridScreen ="s9grid"
+                app.btn6Disabled = True
+                app.bck6_color = 1,1,1,0.2
+                app.root.current = "work"
+            text: app.btn6Text
+            font_size:30 
+            font_name: 'ARCADE.TTF' 
+            markup: True 
+            color: 1,0,1,1
+            background_color: app.bck6_color 
+            background_normal: app.fnGridImage5 
+            disabled: app.btn6Disabled
+            background_disabled_normal: app.fnGridImage5 
+            pos_hint:{'center_x':0.4+0.2+0.2-0.1, 'center_y':0.6-0.2+0.1} 
+            size_hint:0.2,0.2 
+        Button:
+            id: b7
+            on_release: 
+                app.currGrid = 7
+                app.collectOneQuestion()
+                app.selGridScreen ="s9grid"
+                app.btn7Disabled = True
+                app.bck7_color = 1,1,1,0.2
+                app.root.current = "work"
+            text: app.btn7Text
+            font_size:30 
+            font_name: 'ARCADE.TTF' 
+            markup: True 
+            color: 1,0,1,1
+            background_color: app.bck7_color 
+            background_normal: app.fnGridImage6 
+            disabled: app.btn7Disabled
+            background_disabled_normal: app.fnGridImage6 
+            pos_hint:{'center_x':0.4-0.1, 'center_y':0.6-0.2-0.2+0.1}  
+            size_hint:0.2,0.2 
+        Button:
+            id: b8
+            on_release: 
+                app.currGrid = 8
+                app.collectOneQuestion()
+                app.selGridScreen ="s9grid"
+                app.btn8Disabled = True
+                app.bck8_color = 1,1,1,0.2
+                app.root.current = "work"
+            text: app.btn8Text
+            font_size:30 
+            font_name: 'ARCADE.TTF' 
+            markup: True 
+            color: 1,0,1,1
+            background_color: app.bck8_color 
+            background_normal: app.fnGridImage7 
+            disabled: app.btn8Disabled
+            background_disabled_normal: app.fnGridImage7 
+            pos_hint:{'center_x':0.4+0.2-0.1, 'center_y':0.6-0.2-0.2+0.1} 
+            size_hint:0.2,0.2 
+        Button:
+            id: b9
+            on_release: 
+                app.currGrid = 9
+                app.collectOneQuestion()
+                app.selGridScreen ="s9grid"
+                app.btn9Disabled = True
+                app.bck9_color = 1,1,1,0.2
+                app.root.current = "work"
+            text: app.btn9Text
+            font_size:30 
+            font_name: 'ARCADE.TTF' 
+            markup: True 
+            color: 1,0,1,1
+            background_color: app.bck9_color 
+            background_normal: app.fnGridImage8 
+            disabled: app.btn9Disabled
+            background_disabled_normal: app.fnGridImage8 
+            pos_hint:{'center_x':0.4+0.2+0.2-0.1, 'center_y':0.6-0.2-0.2+0.1} 
+            size_hint:0.2,0.2 
+        Button:
+            on_release: 
+                app.set_all_btn_Disabled(False)
+                app.set_all_bck_color([1,1,1,1])
+                app.initAllBtnTxt()
+                app.root.current = "slevel"
+            text: "Back"
+            font_size:25  
+            font_name: 'ARCADE.TTF' 
+            markup: True
+            pos_hint:{'center_x':0.1, 'center_y':0.95}  #0.05
+            size_hint:0.1,0.07 
+            color:1,0,1,1
+        Button:
+            on_release:
+                app.set_all_btn_Disabled(False)
+                app.set_all_bck_color([1,1,1,1])
+                app.initAllBtnTxt()
+                app.root.current = "start"
+            text: "Exit"
+            font_size:25  
+            font_name: 'ARCADE.TTF' 
+            markup: True
+            pos_hint:{'center_x':0.9, 'center_y':0.95} 
+            size_hint:0.1,0.07 
+            color:1,0,1,1
+
+<SelGrid16Screen>:
+    name: "s16grid"
+    FloatLayout:
+        #TotalPointsLabel
+        Button:
+            id: b1
+            on_release: 
+                app.currGrid = 1
+                app.collectOneQuestion()
+                app.selGridScreen ="s16grid"
+                app.btnDisabled = True
+                app.bck_color = 1,1,1,0.2
+                app.root.current = "work"
+            text: app.btn1Text
+            font_size:30 
+            font_name: 'ARCADE.TTF' 
+            markup: True 
+            color: 1,0,1,1
+            background_color: app.bck_color 
+            background_normal: app.fnGridImage0 
+            disabled: app.btnDisabled
+            background_disabled_normal: app.fnGridImage0 
+            pos_hint:{'center_x':0.4-0.1-0.1, 'center_y':0.4+0.2+0.1+0.1-0.07}  
+            size_hint:0.2,0.2 
+        Button:
+            id: b2
+            on_release: 
+                app.currGrid = 2
+                app.collectOneQuestion()
+                app.selGridScreen ="s16grid"
+                app.btn2Disabled = True
+                app.bck2_color = 1,1,1,0.2
+                app.root.current = "work"
+            text: app.btn2Text
+            font_size:30 
+            font_name: 'ARCADE.TTF' 
+            markup: True 
+            color: 1,0,1,1
+            background_color: app.bck2_color 
+            background_normal: app.fnGridImage1 
+            disabled: app.btn2Disabled
+            background_disabled_normal: app.fnGridImage1 
+            pos_hint:{'center_x':0.4+0.2-0.1-0.1, 'center_y':0.4+0.2+0.1+0.1-0.07} 
+            size_hint:0.2,0.2 
+        Button:
+            id: b3
+            on_release: 
+                app.currGrid = 3
+                app.collectOneQuestion()
+                app.selGridScreen ="s16grid"
+                app.btn3Disabled = True
+                app.bck3_color = 1,1,1,0.2
+                app.root.current = "work"
+            text: app.btn3Text
+            font_size:30 
+            font_name: 'ARCADE.TTF' 
+            markup: True 
+            color: 1,0,1,1
+            background_color: app.bck3_color 
+            background_normal: app.fnGridImage2 
+            disabled: app.btn3Disabled
+            background_disabled_normal: app.fnGridImage2 
+            pos_hint:{'center_x':0.4+0.2+0.2-0.1-0.1, 'center_y':0.4+0.2+0.1+0.1-0.07}  
+            size_hint:0.2,0.2 
+        Button:
+            id: b4
+            on_release: 
+                app.currGrid = 4
+                app.collectOneQuestion()
+                app.selGridScreen ="s16grid"
+                app.btn4Disabled = True
+                app.bck4_color = 1,1,1,0.2
+                app.root.current = "work"
+            text: app.btn4Text
+            font_size:30 
+            font_name: 'ARCADE.TTF' 
+            markup: True 
+            color: 1,0,1,1
+            background_color: app.bck4_color 
+            background_normal: app.fnGridImage3 
+            disabled: app.btn4Disabled
+            background_disabled_normal: app.fnGridImage3 
+            pos_hint:{'center_x':0.4+0.2+0.2+0.2-0.1-0.1, 'center_y':0.4+0.2+0.1+0.1-0.07}  
+            size_hint:0.2,0.2 
+        Button:
+            id: b5
+            on_release: 
+                app.currGrid = 5
+                app.collectOneQuestion()
+                app.selGridScreen ="s16grid"
+                app.btn5Disabled = True
+                app.bck5_color = 1,1,1,0.2
+                app.root.current = "work"
+            text: app.btn5Text
+            font_size:30 
+            font_name: 'ARCADE.TTF' 
+            markup: True 
+            color: 1,0,1,1
+            background_color: app.bck5_color 
+            background_normal: app.fnGridImage4 
+            disabled: app.btn5Disabled
+            background_disabled_normal: app.fnGridImage4 
+            pos_hint:{'center_x':0.4-0.1-0.1, 'center_y':0.6-0.2+0.1+0.1-0.07}  
+            size_hint:0.2,0.2 
+        Button:
+            id: b6
+            on_release: 
+                app.currGrid = 6
+                app.collectOneQuestion()
+                app.selGridScreen ="s16grid"
+                app.btn6Disabled = True
+                app.bck6_color = 1,1,1,0.2
+                app.root.current = "work"
+            text: app.btn6Text
+            font_size:30 
+            font_name: 'ARCADE.TTF' 
+            markup: True 
+            color: 1,0,1,1
+            background_color: app.bck6_color 
+            background_normal: app.fnGridImage5 
+            disabled: app.btn6Disabled
+            background_disabled_normal: app.fnGridImage5 
+            pos_hint:{'center_x':0.4+0.2-0.1-0.1, 'center_y':0.6-0.2+0.1+0.1-0.07} 
+            size_hint:0.2,0.2 
+        Button:
+            id: b7
+            on_release: 
+                app.currGrid = 7
+                app.collectOneQuestion()
+                app.selGridScreen ="s16grid"
+                app.btn7Disabled = True
+                app.bck7_color = 1,1,1,0.2
+                app.root.current = "work"
+            text: app.btn7Text
+            font_size:30 
+            font_name: 'ARCADE.TTF' 
+            markup: True 
+            color: 1,0,1,1
+            background_color: app.bck7_color 
+            background_normal: app.fnGridImage6 
+            disabled: app.btn7Disabled
+            background_disabled_normal: app.fnGridImage6 
+            pos_hint:{'center_x':0.4+0.2+0.2-0.1-0.1, 'center_y':0.6-0.2+0.1+0.1-0.07} 
+            size_hint:0.2,0.2 
+        Button:
+            id: b8
+            on_release: 
+                app.currGrid = 8
+                app.collectOneQuestion()
+                app.selGridScreen ="s16grid"
+                app.btn8Disabled = True
+                app.bck8_color = 1,1,1,0.2
+                app.root.current = "work"
+            text: app.btn8Text
+            font_size:30 
+            font_name: 'ARCADE.TTF' 
+            markup: True 
+            color: 1,0,1,1
+            background_color: app.bck8_color 
+            background_normal: app.fnGridImage7 
+            disabled: app.btn8Disabled
+            background_disabled_normal: app.fnGridImage7 
+            pos_hint:{'center_x':0.4+0.2+0.2+0.2-0.1-0.1, 'center_y':0.6-0.2+0.1+0.1-0.07} 
+            size_hint:0.2,0.2 
+        Button:
+            id: b9
+            on_release: 
+                app.currGrid = 9
+                app.collectOneQuestion()
+                app.selGridScreen ="s16grid"
+                app.btn9Disabled = True
+                app.bck9_color = 1,1,1,0.2
+                app.root.current = "work"
+            text: app.btn9Text
+            font_size:30 
+            font_name: 'ARCADE.TTF' 
+            markup: True 
+            color: 1,0,1,1
+            background_color: app.bck9_color 
+            background_normal: app.fnGridImage8 
+            disabled: app.btn9Disabled
+            background_disabled_normal: app.fnGridImage8 
+            pos_hint:{'center_x':0.4-0.1-0.1, 'center_y':0.6-0.2-0.2+0.1+0.1-0.07}  
+            size_hint:0.2,0.2 
+        Button:
+            id: b10
+            on_release: 
+                app.currGrid = 10
+                app.collectOneQuestion()
+                app.selGridScreen ="s16grid"
+                app.btn10Disabled = True
+                app.bck10_color = 1,1,1,0.2
+                app.root.current = "work"
+            text: app.btn10Text
+            font_size:30 
+            font_name: 'ARCADE.TTF' 
+            markup: True 
+            color: 1,0,1,1
+            background_color: app.bck10_color 
+            background_normal: app.fnGridImage9 
+            disabled: app.btn10Disabled
+            background_disabled_normal: app.fnGridImage9 
+            pos_hint:{'center_x':0.4+0.2-0.1-0.1, 'center_y':0.6-0.2-0.2+0.1+0.1-0.07} 
+            size_hint:0.2,0.2 
+        Button:
+            id: b11
+            on_release: 
+                app.currGrid = 11
+                app.collectOneQuestion()
+                app.selGridScreen ="s16grid"
+                app.btn11Disabled = True
+                app.bck11_color = 1,1,1,0.2
+                app.root.current = "work"
+            text: app.btn11Text
+            font_size:30 
+            font_name: 'ARCADE.TTF' 
+            markup: True 
+            color: 1,0,1,1
+            background_color: app.bck11_color 
+            background_normal: app.fnGridImage10 
+            disabled: app.btn11Disabled
+            background_disabled_normal: app.fnGridImage10 
+            pos_hint:{'center_x':0.4+0.2+0.2-0.1-0.1, 'center_y':0.6-0.2-0.2+0.1+0.1-0.07} 
+            size_hint:0.2,0.2 
+        Button:
+            id: b12
+            on_release: 
+                app.currGrid = 12
+                app.collectOneQuestion()
+                app.selGridScreen ="s16grid"
+                app.btn12Disabled = True
+                app.bck12_color = 1,1,1,0.2
+                app.root.current = "work"
+            text: app.btn12Text
+            font_size:30 
+            font_name: 'ARCADE.TTF' 
+            markup: True 
+            color: 1,0,1,1
+            background_color: app.bck12_color 
+            background_normal: app.fnGridImage11 
+            disabled: app.btn12Disabled
+            background_disabled_normal: app.fnGridImage11 
+            pos_hint:{'center_x':0.4+0.2+0.2+0.2-0.1-0.1, 'center_y':0.6-0.2-0.2+0.1+0.1-0.07} 
+            size_hint:0.2,0.2 
+        Button:
+            id: b13
+            on_release: 
+                app.currGrid = 13
+                app.collectOneQuestion()
+                app.selGridScreen ="s16grid"
+                app.btn13Disabled = True
+                app.bck13_color = 1,1,1,0.2
+                app.root.current = "work"
+            text: app.btn13Text
+            font_size:30 
+            font_name: 'ARCADE.TTF' 
+            markup: True 
+            color: 1,0,1,1
+            background_color: app.bck13_color 
+            background_normal: app.fnGridImage12 
+            disabled: app.btn13Disabled
+            background_disabled_normal: app.fnGridImage12
+            pos_hint:{'center_x':0.4-0.1-0.1, 'center_y':0.6-0.2-0.2-0.2+0.1+0.1-0.07}  
+            size_hint:0.2,0.2 
+        Button:
+            id: b14
+            on_release: 
+                app.currGrid = 14
+                app.collectOneQuestion()
+                app.selGridScreen ="s16grid"
+                app.btn14Disabled = True
+                app.bck14_color = 1,1,1,0.2
+                app.root.current = "work"
+            text: app.btn14Text
+            font_size:30 
+            font_name: 'ARCADE.TTF' 
+            markup: True 
+            color: 1,0,1,1
+            background_color: app.bck14_color 
+            background_normal: app.fnGridImage13 
+            disabled: app.btn14Disabled
+            background_disabled_normal: app.fnGridImage13
+            pos_hint:{'center_x':0.4+0.2-0.1-0.1, 'center_y':0.6-0.2-0.2-0.2+0.1+0.1-0.07} 
+            size_hint:0.2,0.2 
+        Button:
+            id: b15
+            on_release: 
+                app.currGrid = 15
+                app.collectOneQuestion()
+                app.selGridScreen ="s16grid"
+                app.btn15Disabled = True
+                app.bck15_color = 1,1,1,0.2
+                app.root.current = "work"
+            text: app.btn15Text
+            font_size:30 
+            font_name: 'ARCADE.TTF' 
+            markup: True 
+            color: 1,0,1,1
+            background_color: app.bck15_color 
+            background_normal: app.fnGridImage14 
+            disabled: app.btn15Disabled
+            background_disabled_normal: app.fnGridImage14
+            pos_hint:{'center_x':0.4+0.2+0.2-0.1-0.1, 'center_y':0.6-0.2-0.2-0.2+0.1+0.1-0.07} 
+            size_hint:0.2,0.2 
+        Button:
+            id: b16
+            on_release: 
+                app.currGrid = 16
+                app.collectOneQuestion()
+                app.selGridScreen ="s16grid"
+                app.btn16Disabled = True
+                app.bck16_color = 1,1,1,0.2
+                app.root.current = "work"
+            text: app.btn16Text
+            font_size:30 
+            font_name: 'ARCADE.TTF' 
+            markup: True 
+            color: 1,0,1,1
+            background_color: app.bck16_color 
+            background_normal: app.fnGridImage15 
+            disabled: app.btn16Disabled
+            background_disabled_normal: app.fnGridImage15
+            pos_hint:{'center_x':0.4+0.2+0.2+0.2-0.1-0.1, 'center_y':0.6-0.2-0.2-0.2+0.1+0.1-0.07} 
+            size_hint:0.2,0.2 
+        Button:
+            on_release: 
+                app.set_all_btn_Disabled(False)
+                app.set_all_bck_color([1,1,1,1])
+                app.initAllBtnTxt()
+                app.root.current = "slevel"
+            text: "Back"
+            font_size:25  
+            font_name: 'ARCADE.TTF' 
+            markup: True
+            pos_hint:{'center_x':0.1, 'center_y':0.95}  #0.05
+            size_hint:0.1,0.07 
+            color:1,0,1,1
+        Button:
+            on_release:
+                app.set_all_btn_Disabled(False)
+                app.set_all_bck_color([1,1,1,1])
+                app.initAllBtnTxt()
+                app.root.current = "start"
+            text: "Exit"
+            font_size:25  
+            font_name: 'ARCADE.TTF' 
+            markup: True
+            pos_hint:{'center_x':0.9, 'center_y':0.95} 
+            size_hint:0.1,0.07 
+            color:1,0,1,1
+
+
+<WorkingScreen>:
+    name: "work"
+    on_enter: 
+        #app.textToSpeech()
+        root.screenName = "work"
+        app.textToSpeechgTTS()
+        #self.teststuff()
+        #app.engine.runAndWait()
+    # _on_keyboard_down: 
+    #     trig_fnc = entr.trigger_action() 
+    ScrollView:
+        #orientation: "horizontal"
+        size_hint:1, None
+        size: root.width, root.height  
+        #bar_width: 4
+        FloatLayout:
+            TotalPointsLabel
+            Label:
+                text: app.questionkvString
+                font_name: 'georgia.ttf'#'6809 chargen.ttf'
+                markup: True
+                font_size: root.width*0.0225#root.width*0.025 #20 
+                pos_hint:{'center_x':0.285, 'center_y':0.55}#0.34   #0.4 right:,top:
+                size_hint_y: None
+                text_size: 320,None  #self.width, None  #
+                height: self.texture_size[1]  
+                halign: 'left'
+                #size_hint:0.3,0.2 
+                color: 1,1,0.6,1
+            Label:
+                text: app.sumTxt+'\n'+app.wrdTxt 
+                font_name: 'georgia.ttf'#'OpenSans-Regular.ttf'
+                markup: True
+                font_size: root.width*0.0188  #15  
+                pos_hint:{'center_x':0.34, 'center_y':0.2}   #0.4
+                size_hint_y: None
+                text_size: 400,None  #self.width, None  #
+                height: self.texture_size[1]  
+                halign: 'left'
+                color: 1,1,0.6,1
+            TextInput:
+                id: tinput
+                font_name: 'georgia.ttf'
+                font_size: '24sp'
+                halign: 'left'
+                size_hint: 0.160,0.07
+                pos_hint:{'center_x':0.15, 'center_y':0.4}
+                multiline: False
+                background_color: 1, 1, 0.6, 1   #171, 183, 183, 1 #rgba(103, 128, 159, 1)
+                #_on_keyboard_down: entr.trigger_action()
+            Button:
+                id: entr
+                on_release: 
+                    app.ans_ent = tinput.text
+                    tinput.text = ""
+                    app.showBtnTxt(app.currGrid)
+                    app.collectAns()
+                    Factory.MyPopup().open()
+                    #app.qpos +=1
+                    #app.reportSummary()
+                    #app.start = time.time()
+                   # app.showBtnTxt(app.currGrid)
+                    app.root.current = app.screenName
+                    # app.textToSpeech() 
+                text: "Enter"
+                font_name: '6809 chargen.ttf'
+                markup: True
+                font_size:root.width*0.0188#15   
+                size: self.texture_size
+                pos_hint:{'center_x':0.35, 'center_y':0.4}  
+                size_hint:0.125,0.07 
+                color: 1,0,1,1
+            Image:
+                allow_stretch: True
+                #color: 1,1,1,0.2
+                source: app.icon
+                keep_ratio: False  # True #
+                pos_hint:{'center_x':0.25, 'center_y':0.85}  
+                size_hint:0.34,0.19 #0.34,0.19
+            Button:
+                on_release:
+                    app.endGame()
+                    app.returnQuestion()
+                    app.root.current = "done"
+                text: "Quit"
+                font_size:25  
+                font_name: 'ARCADE.TTF' 
+                markup: True
+                pos_hint:{'center_x':0.85, 'center_y':0.15} 
+            #size_hint:0.125,0.1 
+                size_hint:0.1,0.07
+                color:1,0,0,1
+
+<WorkingScreen4>:
+    name: "work4"
+    FloatLayout:
+        TotalPointsLabel
+        Label:
+            text: app.selSentenString
+            font_name: '6809 chargen.ttf'
+            markup: True
+            font_size: root.width*0.0225 
+            pos_hint:{'center_x':0.48, 'center_y':0.75}
+            size_hint_y: None
+            text_size: 280,None  
+            height: self.texture_size[1]  
+            halign: 'left'
+            #size_hint:0.3,0.2 
+            color: 1,1,0.6,1
+        Button:
+            on_release: 
+                app.checkSentence()
+                Factory.MyPopup().open()
+                app.root.current = app.screenName
+            text: "Submit"
+            font_name: '6809 chargen.ttf'
+            markup: True
+            font_size:root.width*0.0188 #15   
+            size: self.texture_size
+            pos_hint:{'center_x':0.51, 'center_y':0.25}  
+            size_hint:0.125,0.07 
+            color: 1,0,1,1
+        Button:
+            id: b1
+            on_release:
+                #app.currGrid = 1 
+                #app.collectOneQuestion()
+                #app.selGridScreen ="s9grid"
+                #app.btnDisabled = True
+                #app.bck_color = 1,1,1,0.2
+                app.selSentenString += " "+app.btn1Text
+                app.root.current = app.screenName
+            text: app.btn1Text
+            font_size:30 
+            font_name: 'ARCADE.TTF' 
+            markup: True 
+            color: 1,1,1,1
+            background_color: 1,1,1,0.4 #app.bck_color 
+            background_normal: app.fnGridImage0 
+            #disabled: app.btnDisabled
+            #background_disabled_normal: app.fnGridImage0 
+            pos_hint:{'center_x':0.4, 'center_y':0.4+0.2}  
+            size_hint:0.2,0.2     
+        Button:
+            id: b2
+            on_release: 
+                # app.currGrid = 2
+                # app.collectOneQuestion()
+                # app.selGridScreen ="s9grid"
+                # app.btn2Disabled = True
+                # app.bck2_color = 1,1,1,0.2
+                app.selSentenString += " "+app.btn2Text
+                app.root.current = app.screenName
+            text: app.btn2Text
+            font_size:30 
+            font_name: 'ARCADE.TTF' 
+            markup: True 
+            color: 1,1,1,1
+            background_color: 1,1,1,0.4#app.bck2_color 
+            background_normal: app.fnGridImage1 
+            #disabled: app.btn2Disabled
+            #background_disabled_normal: app.fnGridImage1 
+            pos_hint:{'center_x':0.4+0.2, 'center_y':0.4+0.2} 
+            size_hint:0.2,0.2 
+        Button:
+            id: b3
+            on_release:
+                # app.currGrid = 3
+                # app.collectOneQuestion()
+                # app.selGridScreen ="s9grid" 
+                # app.btn3Disabled = True
+                # app.bck3_color = 1,1,1,0.2
+                app.selSentenString += " "+app.btn3Text
+                app.root.current = app.screenName
+            text: app.btn3Text
+            font_size:30 
+            font_name: 'ARCADE.TTF' 
+            markup: True 
+            color: 1,1,1,1
+            background_color: 1,1,1,0.4#app.bck3_color 
+            background_normal: app.fnGridImage2 
+            #disabled: app.btn3Disabled
+            #background_disabled_normal: app.fnGridImage2 
+            pos_hint:{'center_x':0.4, 'center_y':0.6-0.2}  
+            size_hint:0.2,0.2 
+        Button:
+            id: b4
+            on_release: 
+                # app.currGrid = 4
+                # app.collectOneQuestion()
+                # app.selGridScreen ="s9grid"
+                # app.btn4Disabled = True
+                # app.bck4_color = 1,1,1,0.2
+                app.selSentenString += " "+app.btn4Text
+                app.root.current = app.screenName
+            text: app.btn4Text
+            font_size:30 
+            font_name: 'ARCADE.TTF' 
+            markup: True 
+            color: 1,1,1,1
+            background_color: 1,1,1,0.4#app.bck4_color 
+            background_normal: app.fnGridImage3 
+            #disabled: app.btn4Disabled
+            #background_disabled_normal: app.fnGridImage3 
+            pos_hint:{'center_x':0.4+0.2, 'center_y':0.6-0.2} 
+            size_hint:0.2,0.2 
+        Button:
+            on_release: 
+                app.selSentenString = ""
+                app.root.current = "work4"
+            text: "Clear"
+            font_size:25  
+            font_name: 'ARCADE.TTF' 
+            markup: True
+            pos_hint:{'center_x':0.635, 'center_y':0.25}  #0.05
+            size_hint:0.125,0.07 
+            color:1,0,1,1
+        Button:
+            id: bquit
+            on_release:
+                app.endGame()
+                app.root.current = "done"
+            text: "X"
+            font_size:25  
+            font_name: 'ARCADE.TTF' 
+            markup: True
+            pos_hint:{'center_x':0.1, 'center_y':0.95} 
+            size_hint:0.1,0.07 
+            color:1,0,1,1
+
+
+<WorkingScreen9>:
+    name: "work9"
+    FloatLayout:
+        TotalPointsLabel    
+        Label:
+            text: app.selSentenString
+            font_name: '6809 chargen.ttf'
+            markup: True
+            font_size: root.width*0.0225 
+            pos_hint:{'center_x':0.37, 'center_y':0.84}
+            size_hint_y: None
+            text_size: 280,None  
+            height: self.texture_size[1]  
+            halign: 'left'
+            #size_hint:0.3,0.2 
+            color: 1,1,0.6,1
+        Button:
+            on_release: 
+                app.checkSentence()
+                Factory.MyPopup().open()
+                app.root.current = app.screenName
+            text: "Submit"
+            font_name: '6809 chargen.ttf'
+            markup: True
+            font_size:root.width*0.0188 #15   
+            size: self.texture_size
+            pos_hint:{'center_x':0.61, 'center_y':0.15}  
+            size_hint:0.125,0.07 
+            color: 1,0,1,1
+        Button:
+            id: b1
+            on_release:
+                app.selSentenString += " "+app.btn1Text
+                app.root.current = app.screenName
+            text: app.btn1Text
+            font_size:30 
+            font_name: 'ARCADE.TTF' 
+            markup: True 
+            color: 1,1,1,1
+            background_color: 1,1,1,0.4#app.bck_color 
+            background_normal: app.fnGridImage0 
+            #disabled: app.btnDisabled
+            #background_disabled_normal: app.fnGridImage0 
+            pos_hint:{'center_x':0.4-0.1, 'center_y':0.4+0.2+0.1}  
+            size_hint:0.2,0.2 
+        Button:
+            id: b2
+            on_release: 
+                app.selSentenString += " "+app.btn2Text
+                app.root.current = app.screenName
+            text: app.btn2Text
+            font_size:30 
+            font_name: 'ARCADE.TTF' 
+            markup: True 
+            color: 1,1,1,1
+            background_color: 1,1,1,0.4#app.bck2_color 
+            background_normal: app.fnGridImage1 
+            #disabled: app.btn2Disabled
+            #background_disabled_normal: app.fnGridImage1 
+            pos_hint:{'center_x':0.4+0.2-0.1, 'center_y':0.4+0.2+0.1} 
+            size_hint:0.2,0.2 
+        Button:
+            id: b3
+            on_release:
+                app.selSentenString += " "+app.btn3Text
+                app.root.current = app.screenName
+            text: app.btn3Text
+            font_size:30 
+            font_name: 'ARCADE.TTF' 
+            markup: True 
+            color: 1,1,1,1
+            background_color: 1,1,1,0.4#app.bck3_color 
+            background_normal: app.fnGridImage2 
+            #disabled: app.btn3Disabled
+            #background_disabled_normal: app.fnGridImage2 
+            pos_hint:{'center_x':0.4+0.2+0.2-0.1, 'center_y':0.4+0.2+0.1}  
+            size_hint:0.2,0.2 
+        Button:
+            id: b4
+            on_release: 
+                app.selSentenString += " "+app.btn4Text
+                app.root.current = app.screenName
+            text: app.btn4Text
+            font_size:30 
+            font_name: 'ARCADE.TTF' 
+            markup: True 
+            color: 1,1,1,1
+            background_color: 1,1,1,0.4#app.bck4_color 
+            background_normal: app.fnGridImage3 
+            #disabled: app.btn4Disabled
+            #background_disabled_normal: app.fnGridImage3 
+            pos_hint:{'center_x':0.4-0.1, 'center_y':0.6-0.2+0.1}  
+            size_hint:0.2,0.2 
+        Button:
+            id: b5
+            on_release: 
+                app.selSentenString += " "+app.btn5Text
+                app.root.current = app.screenName
+            text: app.btn5Text
+            font_size:30 
+            font_name: 'ARCADE.TTF' 
+            markup: True 
+            color: 1,1,1,1
+            background_color: 1,1,1,0.4#app.bck5_color 
+            background_normal: app.fnGridImage4 
+            #disabled: app.btn5Disabled
+            #background_disabled_normal: app.fnGridImage4 
+            pos_hint:{'center_x':0.4+0.2-0.1, 'center_y':0.6-0.2+0.1} 
+            size_hint:0.2,0.2 
+        Button:
+            id: b6
+            on_release: 
+                app.selSentenString += " "+app.btn6Text
+                app.root.current = app.screenName
+            text: app.btn6Text
+            font_size:30 
+            font_name: 'ARCADE.TTF' 
+            markup: True 
+            color: 1,1,1,1
+            background_color: 1,1,1,0.4#app.bck6_color 
+            background_normal: app.fnGridImage5 
+            #disabled: app.btn6Disabled
+            #background_disabled_normal: app.fnGridImage5 
+            pos_hint:{'center_x':0.4+0.2+0.2-0.1, 'center_y':0.6-0.2+0.1} 
+            size_hint:0.2,0.2 
+        Button:
+            id: b7
+            on_release: 
+                app.selSentenString += " "+app.btn7Text
+                app.root.current = app.screenName
+            text: app.btn7Text
+            font_size:30 
+            font_name: 'ARCADE.TTF' 
+            markup: True 
+            color: 1,1,1,1
+            background_color: 1,1,1,0.4#app.bck7_color 
+            background_normal: app.fnGridImage6 
+            #disabled: app.btn7Disabled
+            #background_disabled_normal: app.fnGridImage6 
+            pos_hint:{'center_x':0.4-0.1, 'center_y':0.6-0.2-0.2+0.1}  
+            size_hint:0.2,0.2 
+        Button:
+            id: b8
+            on_release: 
+                app.selSentenString += " "+app.btn8Text
+                app.root.current = app.screenName
+            text: app.btn8Text
+            font_size:30 
+            font_name: 'ARCADE.TTF' 
+            markup: True 
+            color: 1,1,1,1
+            background_color: 1,1,1,0.4#app.bck8_color 
+            background_normal: app.fnGridImage7 
+            #disabled: app.btn8Disabled
+            #background_disabled_normal: app.fnGridImage7 
+            pos_hint:{'center_x':0.4+0.2-0.1, 'center_y':0.6-0.2-0.2+0.1} 
+            size_hint:0.2,0.2 
+        Button:
+            id: b9
+            on_release: 
+                app.selSentenString += " "+app.btn9Text
+                app.root.current = app.screenName
+            text: app.btn9Text
+            font_size:30 
+            font_name: 'ARCADE.TTF' 
+            markup: True 
+            color: 1,1,1,1
+            background_color: 1,1,1,0.4#app.bck9_color 
+            background_normal: app.fnGridImage8 
+            #disabled: app.btn9Disabled
+            #background_disabled_normal: app.fnGridImage8 
+            pos_hint:{'center_x':0.4+0.2+0.2-0.1, 'center_y':0.6-0.2-0.2+0.1} 
+            size_hint:0.2,0.2 
+        Button:
+            on_release: 
+                app.selSentenString = ""
+                app.root.current = "work9"
+            text: "Clear"
+            font_size:25  
+            font_name: 'ARCADE.TTF' 
+            markup: True
+            pos_hint:{'center_x':0.735, 'center_y':0.15}  #0.05  0.84
+            size_hint:0.125,0.07   
+            color:1,0,1,1
+        Button:
+            id: bquit
+            on_release:
+                app.endGame()
+                app.root.current = "done"
+            text: "X"
+            font_size:25  
+            font_name: 'ARCADE.TTF' 
+            markup: True
+            pos_hint:{'center_x':0.1, 'center_y':0.95} 
+            size_hint:0.1,0.07 
+            color:1,0,1,1
+
+
+<WorkingScreen16>:
+    name: "work16"
+    FloatLayout:
+        TotalPointsLabel    
+        Label:
+            text: app.selSentenString
+            font_name: '6809 chargen.ttf'
+            markup: True
+            font_size: root.width*0.0225 
+            pos_hint:{'center_x':0.36, 'center_y':0.83}
+            size_hint_y: None
+            text_size: 320,None  
+            height: self.texture_size[1]  
+            halign: 'left'
+            #size_hint:0.3,0.2 
+            color: 1,1,0.6,1
+        Button:
+            on_release: 
+                app.checkSentence()
+                Factory.MyPopup().open()
+                app.root.current = app.screenName
+            text: "Submit"
+            font_name: '6809 chargen.ttf'
+            markup: True
+            font_size:root.width*0.0188 #15   
+            size: self.texture_size
+            pos_hint:{'center_x':0.58, 'center_y':0.15}  
+            size_hint:0.125,0.07 
+            color: 1,0,1,1
+        Button:
+            id: b1
+            on_release:
+                app.selSentenString += " "+app.btn1Text
+                app.root.current = app.screenName
+            text: app.btn1Text
+            font_size:22.5
+            font_name: 'ARCADE.TTF' 
+            markup: True 
+            color: 1,1,1,1
+            background_color: 1,1,1,0.4#app.bck_color 
+            background_normal: app.fnGridImage0 
+            #disabled: app.btnDisabled
+            #background_disabled_normal: app.fnGridImage0 
+            pos_hint:{'center_x':0.4-0.075-0.075, 'center_y':0.4+0.2+0.1+0.1-0.07}  
+            size_hint:0.15,0.15 
+        Button:
+            id: b2
+            on_release: 
+                app.selSentenString += " "+app.btn2Text
+                app.root.current = app.screenName
+            text: app.btn2Text
+            font_size:22.5
+            font_name: 'ARCADE.TTF' 
+            markup: True 
+            color: 1,1,1,1
+            background_color: 1,1,1,0.4#app.bck2_color 
+            background_normal: app.fnGridImage1 
+            #disabled: app.btn2Disabled
+            #background_disabled_normal: app.fnGridImage1 
+            pos_hint:{'center_x':0.4+0.15-0.075-0.075, 'center_y':0.4+0.2+0.1+0.1-0.07} 
+            size_hint:0.15,0.15 
+        Button:
+            id: b3
+            on_release:
+                app.selSentenString += " "+app.btn3Text
+                app.root.current = app.screenName
+            text: app.btn3Text
+            font_size:22.5
+            font_name: 'ARCADE.TTF' 
+            markup: True 
+            color: 1,1,1,1
+            background_color: 1,1,1,0.4#app.bck3_color 
+            background_normal: app.fnGridImage2 
+            #disabled: app.btn3Disabled
+            #background_disabled_normal: app.fnGridImage2 
+            pos_hint:{'center_x':0.4+0.15+0.15-0.075-0.075, 'center_y':0.4+0.2+0.1+0.1-0.07}  
+            size_hint:0.15,0.15 
+        Button:
+            id: b4
+            on_release: 
+                app.selSentenString += " "+app.btn4Text
+                app.root.current = app.screenName
+            text: app.btn4Text
+            font_size:22.5
+            font_name: 'ARCADE.TTF' 
+            markup: True 
+            color: 1,1,1,1
+            background_color: 1,1,1,0.4#app.bck4_color 
+            background_normal: app.fnGridImage3 
+            #disabled: app.btn4Disabled
+            #background_disabled_normal: app.fnGridImage3 
+            pos_hint:{'center_x':0.4+0.15+0.15+0.15-0.075-0.075, 'center_y':0.4+0.2+0.1+0.1-0.07}  
+            size_hint:0.15,0.15  
+        Button:
+            id: b5
+            on_release: 
+                app.selSentenString += " "+app.btn5Text
+                app.root.current = app.screenName
+            text: app.btn5Text
+            font_size:22.5 
+            font_name: 'ARCADE.TTF' 
+            markup: True 
+            color: 1,1,1,1
+            background_color: 1,1,1,0.4#app.bck5_color 
+            background_normal: app.fnGridImage4 
+            #disabled: app.btn5Disabled
+            #background_disabled_normal: app.fnGridImage4 
+            pos_hint:{'center_x':0.4-0.075-0.075, 'center_y':0.6-0.2+0.1+0.1-0.07+0.05}  
+            size_hint:0.15,0.15 
+        Button:
+            id: b6
+            on_release: 
+                app.selSentenString += " "+app.btn6Text
+                app.root.current = app.screenName
+            text: app.btn6Text
+            font_size:22.5 
+            font_name: 'ARCADE.TTF' 
+            markup: True 
+            color: 1,1,1,1
+            background_color: 1,1,1,0.4#app.bck6_color 
+            background_normal: app.fnGridImage5 
+            #disabled: app.btn6Disabled
+            #background_disabled_normal: app.fnGridImage5 
+            pos_hint:{'center_x':0.4+0.15-0.075-0.075, 'center_y':0.6-0.2+0.1+0.1-0.07+0.05} 
+            size_hint:0.15,0.15 
+        Button:
+            id: b7
+            on_release: 
+                app.selSentenString += " "+app.btn7Text
+                app.root.current = app.screenName
+            text: app.btn7Text
+            font_size:22.5
+            font_name: 'ARCADE.TTF' 
+            markup: True 
+            color: 1,1,1,1
+            background_color: 1,1,1,0.4#app.bck7_color 
+            background_normal: app.fnGridImage6 
+            #disabled: app.btn7Disabled
+            #background_disabled_normal: app.fnGridImage6 
+            pos_hint:{'center_x':0.4+0.15+0.15-0.075-0.075, 'center_y':0.6-0.2+0.1+0.1-0.07+0.05} 
+            size_hint:0.15,0.15 
+        Button:
+            id: b8
+            on_release: 
+                app.selSentenString += " "+app.btn8Text
+                app.root.current = app.screenName
+            text: app.btn8Text
+            font_size:22.5
+            font_name: 'ARCADE.TTF' 
+            markup: True 
+            color: 1,1,1,1
+            background_color: 1,1,1,0.4#app.bck8_color 
+            background_normal: app.fnGridImage7 
+            #disabled: app.btn8Disabled
+            #background_disabled_normal: app.fnGridImage7 
+            pos_hint:{'center_x':0.4+0.15+0.15+0.15-0.075-0.075, 'center_y':0.6-0.2+0.1+0.1-0.07+0.05} 
+            size_hint:0.15,0.15  
+        Button:
+            id: b9
+            on_release: 
+                app.selSentenString += " "+app.btn9Text
+                app.root.current = app.screenName
+            text: app.btn9Text
+            font_size:22.5 
+            font_name: 'ARCADE.TTF' 
+            markup: True 
+            color: 1,1,1,1
+            background_color: 1,1,1,0.4#app.bck9_color 
+            background_normal: app.fnGridImage8 
+            #disabled: app.btn9Disabled
+            #background_disabled_normal: app.fnGridImage8 
+            pos_hint:{'center_x':0.4-0.075-0.075, 'center_y':0.6-0.2-0.2+0.1+0.1-0.07+0.05+0.05}  
+            size_hint:0.15,0.15 
+        Button:
+            id: b10
+            on_release: 
+                app.selSentenString += " "+app.btn10Text
+                app.root.current = app.screenName
+            text: app.btn10Text
+            font_size:22.5
+            font_name: 'ARCADE.TTF' 
+            markup: True 
+            color: 1,1,1,1
+            background_color: 1,1,1,0.4#app.bck10_color 
+            background_normal: app.fnGridImage9 
+            #disabled: app.btn10Disabled
+            #background_disabled_normal: app.fnGridImage9 
+            pos_hint:{'center_x':0.4+0.15-0.075-0.075, 'center_y':0.6-0.2-0.2+0.1+0.1-0.07+0.05+0.05} 
+            size_hint:0.15,0.15 
+        Button:
+            id: b11
+            on_release: 
+                app.selSentenString += " "+app.btn11Text
+                app.root.current = app.screenName
+            text: app.btn11Text
+            font_size:22.5 
+            font_name: 'ARCADE.TTF' 
+            markup: True 
+            color: 1,1,1,1
+            background_color: 1,1,1,0.4#app.bck11_color 
+            background_normal: app.fnGridImage10 
+            #disabled: app.btn11Disabled
+            #background_disabled_normal: app.fnGridImage10 
+            pos_hint:{'center_x':0.4+0.15+0.15-0.075-0.075, 'center_y':0.6-0.2-0.2+0.1+0.1-0.07+0.05+0.05} 
+            size_hint:0.15,0.15  
+        Button:
+            id: b12
+            on_release: 
+                app.selSentenString += " "+app.btn12Text
+                app.root.current = app.screenName
+            text: app.btn12Text
+            font_size:22.5
+            font_name: 'ARCADE.TTF' 
+            markup: True 
+            color: 1,1,1,1
+            background_color: 1,1,1,0.4#app.bck12_color 
+            background_normal: app.fnGridImage11 
+            #disabled: app.btn12Disabled
+            #background_disabled_normal: app.fnGridImage11 
+            pos_hint:{'center_x':0.4+0.15+0.15+0.15-0.075-0.075, 'center_y':0.6-0.2-0.2+0.1+0.1-0.07+0.05+0.05} 
+            size_hint:0.15,0.15 
+        Button:
+            id: b13
+            on_release: 
+                app.selSentenString += " "+app.btn13Text
+                app.root.current = app.screenName
+            text: app.btn13Text
+            font_size:22.5 
+            font_name: 'ARCADE.TTF' 
+            markup: True 
+            color: 1,1,1,1
+            background_color: 1,1,1,0.4#app.bck13_color 
+            background_normal: app.fnGridImage12 
+            #disabled: app.btn13Disabled
+            #background_disabled_normal: app.fnGridImage12
+            pos_hint:{'center_x':0.4-0.075-0.075, 'center_y':0.6-0.2-0.2-0.2+0.1+0.1-0.07+0.05+0.05+0.05}  
+            size_hint:0.15,0.15 
+        Button:
+            id: b14
+            on_release: 
+                app.selSentenString += " "+app.btn14Text
+                app.root.current = app.screenName
+            text: app.btn14Text
+            font_size:22.5
+            font_name: 'ARCADE.TTF' 
+            markup: True 
+            color: 1,1,1,1
+            background_color: 1,1,1,0.4#app.bck14_color 
+            background_normal: app.fnGridImage13 
+            #disabled: app.btn14Disabled
+            #background_disabled_normal: app.fnGridImage13
+            pos_hint:{'center_x':0.4+0.15-0.075-0.075, 'center_y':0.6-0.2-0.2-0.2+0.1+0.1-0.07+0.05+0.05+0.05} 
+            size_hint:0.15,0.15 
+        Button:
+            id: b15
+            on_release: 
+                app.selSentenString += " "+app.btn15Text
+                app.root.current = app.screenName
+            text: app.btn15Text
+            font_size:22.5
+            font_name: 'ARCADE.TTF' 
+            markup: True 
+            color: 1,1,1,1
+            background_color: 1,1,1,0.4#app.bck15_color 
+            background_normal: app.fnGridImage14 
+            #disabled: app.btn15Disabled
+            #background_disabled_normal: app.fnGridImage14
+            pos_hint:{'center_x':0.4+0.15+0.15-0.075-0.075, 'center_y':0.6-0.2-0.2-0.2+0.1+0.1-0.07+0.05+0.05+0.05} 
+            size_hint:0.15,0.15 
+        Button:
+            id: b16
+            on_release: 
+                app.selSentenString += " "+app.btn16Text
+                app.root.current = app.screenName
+            text: app.btn16Text
+            font_size:22.5
+            font_name: 'ARCADE.TTF' 
+            markup: True 
+            color: 1,1,1,1
+            background_color: 1,1,1,0.4#app.bck16_color 
+            background_normal: app.fnGridImage15 
+            #disabled: app.btn16Disabled
+            #background_disabled_normal: app.fnGridImage15
+            pos_hint:{'center_x':0.4+0.15+0.15+0.15-0.075-0.075, 'center_y':0.6-0.2-0.2-0.2+0.1+0.1-0.07+0.05+0.05+0.05} 
+            size_hint:0.15,0.15 
+        Button:
+            on_release: 
+                app.selSentenString = ""
+                app.root.current = "work16"
+            text: "Clear"
+            font_size:25  
+            font_name: 'ARCADE.TTF' 
+            markup: True
+            pos_hint:{'center_x':0.705, 'center_y':0.15}  #0.05
+            size_hint:0.125,0.07 
+            color:1,0,1,1
+        Button:
+            id: bquit
+            on_release:
+                app.endGame()
+                app.root.current = "done"
+            text: "X"
+            font_size:25  
+            font_name: 'ARCADE.TTF' 
+            markup: True
+            pos_hint:{'center_x':0.1, 'center_y':0.95} 
+            size_hint:0.1,0.07 
+            color:1,0,1,1
+
+
+
+<DoneScreen>:
+    name: "done"
+    FloatLayout:
+        TotalPointsLabel
+        Label:
+            text: app.questionkvString 
+            font_name: '6809 chargen.ttf'
+            markup: True
+            #font_size:30   
+            pos_hint:{'center_x':0.35, 'center_y':0.7}  
+            font_size: root.width*0.0375  #15  
+            size_hint_y: None
+            text_size: 400,None  #self.width, None  #
+            height: self.texture_size[1]  
+            halign: 'left'
+            color: 0,0,1,1
+        Button:
+            id: b1
+            on_release: 
+                app.restart()
+                app.set_all_btn_Disabled(False)
+                app.set_all_bck_color([1,1,1,1])
+                app.initAllBtnTxt()
+                app.root.current = "slevel"
+            text: "Play Again"
+            font_size:25  
+            font_name: 'ARCADE.TTF' 
+            markup: True
+            pos_hint:{'center_x':0.2, 'center_y':0.4} 
+            size_hint:0.2,0.2 
+            color:1,0,1,1
+        Button:
+            id: b2
+            on_release:
+                app.restart()
+                app.set_all_btn_Disabled(False)
+                app.set_all_bck_color([1,1,1,1])
+                app.initAllBtnTxt()
+                app.root.current = "start"
+            text: "Exit"
+            font_size:25  
+            font_name: 'ARCADE.TTF' 
+            markup: True
+            pos_hint:{'center_x':0.8, 'center_y':0.4} 
+            size_hint:0.2,0.2 
+            color:1,0,1,1
