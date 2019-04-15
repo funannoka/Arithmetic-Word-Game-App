@@ -1,6 +1,6 @@
 #:kivy 1.10.1
 #file_name: wordgame.py
-
+# import pygame pygame.pygame
 #: import FadeTransition kivy.uix.screenmanager.FadeTransition
 #: import Label kivy.uix.label.Label
 #: import time time.time
@@ -27,7 +27,7 @@ ScreenManagement:
     text: '[i]'+app.pointLabelTxt+'[/i]'
     font_name: 'zorque.ttf'   # ARCADE.TTF
     markup: True
-    font_size: 15
+    font_size: 0.01875*root.width#15
     #pos: root.right-self.width-root.offset,root.top-self.height
     pos_hint:{'center_x':0.85, 'center_y':0.9}  
     #pos_hint:{'right':1, 'top':1}  
@@ -42,11 +42,13 @@ ScreenManagement:
     halign: 'center'
     #content:
     size_hint:0.3,0.25
+    #on_open:
+    #    root.disable_entr_btn()
     on_dismiss:
         app.returnQuestion()
         # app.textToSpeechgTTS()#app.textToSpeech() 
         #cntr.popon =0
-    #size: 400,400
+    #size: root.self*0.125,root.self*0.125
     #auto_dismiss: False
     Label:
         text:app.errDef
@@ -69,7 +71,7 @@ ScreenManagement:
             text: 'Arithmetic Word Game'
             font_name:  'neuropol x rg'    # ARCADE.TTF
             markup: True
-            font_size: '40sp'
+            font_size: 0.05*root.width#40#'40sp'
             pos: root.right-self.width,root.top-self.height+(root.top/2.5)
             #pos_hint:{'right':0.85, 'top':0.85}  
             #size_hint:0.3,0.2 
@@ -77,7 +79,7 @@ ScreenManagement:
 
         Button:   #ff3333  3333ff
             id: btn
-            on_release: 
+            on_press: 
                 app.setAllBtnTxt()
                 app.root.current = "slevel"
             text: u'[color=ffffff]Start [/color][color=ff3333][b]Game[/b][/color]'
@@ -85,10 +87,23 @@ ScreenManagement:
             markup: True
             unichr:2764
             size: self.texture_size
-            font_size:'30sp'
+            font_size: 0.04375*root.width #35 #30#'30sp'0.0375
             pos_hint:{'right':0.645, 'top':0.645}  
             size_hint:0.3,0.2 
             #color: 1,0,1,1
+        Button:
+            on_release:
+                app.get_running_app().stop()
+            text: "X"
+            font_size:0.01875*root.width#15  
+            font_name: '6809 chargen.ttf' 
+            markup: True
+            unichr:2764
+            size: self.texture_size
+            pos_hint:{'right':1-0.02,'top':1-0.01} 
+            size_hint:0.07,0.07 
+            color:1,0,1,1
+
 
 <SelLevelScreen>:
     name: "slevel"
@@ -105,7 +120,7 @@ ScreenManagement:
                 app.wrkScreen = "work4"
                 app.root.current = "sgrid"
             text: "Level 1"
-            font_size:30   
+            font_size:0.0375*root.width#30   
             font_name: 'ARCADE.TTF'
             markup: True
             pos_hint:{'x':0+0.04, 'top':0.645}   
@@ -122,7 +137,7 @@ ScreenManagement:
                 app.wrkScreen = "work9"
                 app.root.current = "s9grid"
             text: "Level 2"
-            font_size:30  
+            font_size:0.0375*root.width#30  
             font_name: 'ARCADE.TTF' 
             markup: True
             pos_hint:{'right':0.645, 'top':0.645}  
@@ -139,7 +154,7 @@ ScreenManagement:
                 #app.collectQuestions() 
                 app.root.current = "s16grid"
             text: "Level 3"
-            font_size:30 
+            font_size:0.0375*root.width#30 
             font_name: 'ARCADE.TTF' 
             markup: True 
             pos_hint:{'right':1-0.05, 'top':0.645}  
@@ -165,7 +180,7 @@ ScreenManagement:
                 #app.showBtnTxt(1)
                 app.root.current = "work"
             text: app.btn1Text
-            font_size:30 
+            font_size:0.0375*root.width#30 
             font_name: 'ARCADE.TTF' 
             markup: True 
             color: 1,0,1,1
@@ -186,7 +201,7 @@ ScreenManagement:
                 #app.showBtnTxt(2)
                 app.root.current = "work"
             text: app.btn2Text
-            font_size:30 
+            font_size:0.0375*root.width#30 
             font_name: 'ARCADE.TTF' 
             markup: True 
             color: 1,0,1,1
@@ -207,7 +222,7 @@ ScreenManagement:
                 #app.showBtnTxt(3)
                 app.root.current = "work"
             text: app.btn3Text
-            font_size:30 
+            font_size:0.0375*root.width#30 
             font_name: 'ARCADE.TTF' 
             markup: True 
             color: 1,0,1,1
@@ -228,7 +243,7 @@ ScreenManagement:
                 #app.showBtnTxt(4)
                 app.root.current = "work"
             text: app.btn4Text
-            font_size:30 
+            font_size:0.0375*root.width#30 
             font_name: 'ARCADE.TTF' 
             markup: True 
             color: 1,0,1,1
@@ -245,7 +260,7 @@ ScreenManagement:
                 app.initAllBtnTxt()
                 app.root.current = "slevel"
             text: "Back"
-            font_size:25  
+            font_size:0.03125*root.width#25  
             font_name: 'ARCADE.TTF' 
             markup: True
             pos_hint:{'center_x':0.1, 'center_y':0.95}  #0.05
@@ -258,7 +273,7 @@ ScreenManagement:
                 app.initAllBtnTxt()
                 app.root.current = "start"
             text: "Exit"
-            font_size:25  
+            font_size:0.03125*root.width#25  
             font_name: 'ARCADE.TTF' 
             markup: True
             pos_hint:{'center_x':0.9, 'center_y':0.95} 
@@ -281,7 +296,7 @@ ScreenManagement:
                 app.bck_color = 1,1,1,0.2
                 app.root.current = "work"
             text: app.btn1Text
-            font_size:30 
+            font_size:0.0375*root.width#30 
             font_name: 'ARCADE.TTF' 
             markup: True 
             color: 1,0,1,1
@@ -301,7 +316,7 @@ ScreenManagement:
                 app.bck2_color = 1,1,1,0.2
                 app.root.current = "work"
             text: app.btn2Text
-            font_size:30 
+            font_size:0.0375*root.width#30 
             font_name: 'ARCADE.TTF' 
             markup: True 
             color: 1,0,1,1
@@ -321,7 +336,7 @@ ScreenManagement:
                 app.bck3_color = 1,1,1,0.2
                 app.root.current = "work"
             text: app.btn3Text
-            font_size:30 
+            font_size:0.0375*root.width#30 
             font_name: 'ARCADE.TTF' 
             markup: True 
             color: 1,0,1,1
@@ -341,7 +356,7 @@ ScreenManagement:
                 app.bck4_color = 1,1,1,0.2
                 app.root.current = "work"
             text: app.btn4Text
-            font_size:30 
+            font_size:0.0375*root.width#30  
             font_name: 'ARCADE.TTF' 
             markup: True 
             color: 1,0,1,1
@@ -361,7 +376,7 @@ ScreenManagement:
                 app.bck5_color = 1,1,1,0.2
                 app.root.current = "work"
             text: app.btn5Text
-            font_size:30 
+            font_size:0.0375*root.width#30  
             font_name: 'ARCADE.TTF' 
             markup: True 
             color: 1,0,1,1
@@ -381,7 +396,7 @@ ScreenManagement:
                 app.bck6_color = 1,1,1,0.2
                 app.root.current = "work"
             text: app.btn6Text
-            font_size:30 
+            font_size:0.0375*root.width#30  
             font_name: 'ARCADE.TTF' 
             markup: True 
             color: 1,0,1,1
@@ -401,7 +416,7 @@ ScreenManagement:
                 app.bck7_color = 1,1,1,0.2
                 app.root.current = "work"
             text: app.btn7Text
-            font_size:30 
+            font_size:0.0375*root.width#30  
             font_name: 'ARCADE.TTF' 
             markup: True 
             color: 1,0,1,1
@@ -421,7 +436,7 @@ ScreenManagement:
                 app.bck8_color = 1,1,1,0.2
                 app.root.current = "work"
             text: app.btn8Text
-            font_size:30 
+            font_size:0.0375*root.width#30  
             font_name: 'ARCADE.TTF' 
             markup: True 
             color: 1,0,1,1
@@ -441,7 +456,7 @@ ScreenManagement:
                 app.bck9_color = 1,1,1,0.2
                 app.root.current = "work"
             text: app.btn9Text
-            font_size:30 
+            font_size:0.0375*root.width#30  
             font_name: 'ARCADE.TTF' 
             markup: True 
             color: 1,0,1,1
@@ -458,7 +473,7 @@ ScreenManagement:
                 app.initAllBtnTxt()
                 app.root.current = "slevel"
             text: "Back"
-            font_size:25  
+            font_size:0.03125*root.width#30   
             font_name: 'ARCADE.TTF' 
             markup: True
             pos_hint:{'center_x':0.1, 'center_y':0.95}  #0.05
@@ -471,7 +486,7 @@ ScreenManagement:
                 app.initAllBtnTxt()
                 app.root.current = "start"
             text: "Exit"
-            font_size:25  
+            font_size:0.03125*root.width#30  
             font_name: 'ARCADE.TTF' 
             markup: True
             pos_hint:{'center_x':0.9, 'center_y':0.95} 
@@ -492,7 +507,7 @@ ScreenManagement:
                 app.bck_color = 1,1,1,0.2
                 app.root.current = "work"
             text: app.btn1Text
-            font_size:30 
+            font_size:0.0375*root.width#30 
             font_name: 'ARCADE.TTF' 
             markup: True 
             color: 1,0,1,1
@@ -512,7 +527,7 @@ ScreenManagement:
                 app.bck2_color = 1,1,1,0.2
                 app.root.current = "work"
             text: app.btn2Text
-            font_size:30 
+            font_size:0.0375*root.width#30  
             font_name: 'ARCADE.TTF' 
             markup: True 
             color: 1,0,1,1
@@ -532,7 +547,7 @@ ScreenManagement:
                 app.bck3_color = 1,1,1,0.2
                 app.root.current = "work"
             text: app.btn3Text
-            font_size:30 
+            font_size:0.0375*root.width#30  
             font_name: 'ARCADE.TTF' 
             markup: True 
             color: 1,0,1,1
@@ -552,7 +567,7 @@ ScreenManagement:
                 app.bck4_color = 1,1,1,0.2
                 app.root.current = "work"
             text: app.btn4Text
-            font_size:30 
+            font_size:0.0375*root.width#30  
             font_name: 'ARCADE.TTF' 
             markup: True 
             color: 1,0,1,1
@@ -572,7 +587,7 @@ ScreenManagement:
                 app.bck5_color = 1,1,1,0.2
                 app.root.current = "work"
             text: app.btn5Text
-            font_size:30 
+            font_size:0.0375*root.width#30  
             font_name: 'ARCADE.TTF' 
             markup: True 
             color: 1,0,1,1
@@ -592,7 +607,7 @@ ScreenManagement:
                 app.bck6_color = 1,1,1,0.2
                 app.root.current = "work"
             text: app.btn6Text
-            font_size:30 
+            font_size:0.0375*root.width#30  
             font_name: 'ARCADE.TTF' 
             markup: True 
             color: 1,0,1,1
@@ -612,7 +627,7 @@ ScreenManagement:
                 app.bck7_color = 1,1,1,0.2
                 app.root.current = "work"
             text: app.btn7Text
-            font_size:30 
+            font_size:0.0375*root.width#30  
             font_name: 'ARCADE.TTF' 
             markup: True 
             color: 1,0,1,1
@@ -632,7 +647,7 @@ ScreenManagement:
                 app.bck8_color = 1,1,1,0.2
                 app.root.current = "work"
             text: app.btn8Text
-            font_size:30 
+            font_size:0.0375*root.width#30  
             font_name: 'ARCADE.TTF' 
             markup: True 
             color: 1,0,1,1
@@ -652,7 +667,7 @@ ScreenManagement:
                 app.bck9_color = 1,1,1,0.2
                 app.root.current = "work"
             text: app.btn9Text
-            font_size:30 
+            font_size:0.0375*root.width#30  
             font_name: 'ARCADE.TTF' 
             markup: True 
             color: 1,0,1,1
@@ -672,7 +687,7 @@ ScreenManagement:
                 app.bck10_color = 1,1,1,0.2
                 app.root.current = "work"
             text: app.btn10Text
-            font_size:30 
+            font_size:0.0375*root.width#30 
             font_name: 'ARCADE.TTF' 
             markup: True 
             color: 1,0,1,1
@@ -692,7 +707,7 @@ ScreenManagement:
                 app.bck11_color = 1,1,1,0.2
                 app.root.current = "work"
             text: app.btn11Text
-            font_size:30 
+            font_size:0.0375*root.width#30  
             font_name: 'ARCADE.TTF' 
             markup: True 
             color: 1,0,1,1
@@ -712,7 +727,7 @@ ScreenManagement:
                 app.bck12_color = 1,1,1,0.2
                 app.root.current = "work"
             text: app.btn12Text
-            font_size:30 
+            font_size:0.0375*root.width#30  
             font_name: 'ARCADE.TTF' 
             markup: True 
             color: 1,0,1,1
@@ -732,7 +747,7 @@ ScreenManagement:
                 app.bck13_color = 1,1,1,0.2
                 app.root.current = "work"
             text: app.btn13Text
-            font_size:30 
+            font_size:0.0375*root.width#30  
             font_name: 'ARCADE.TTF' 
             markup: True 
             color: 1,0,1,1
@@ -752,7 +767,7 @@ ScreenManagement:
                 app.bck14_color = 1,1,1,0.2
                 app.root.current = "work"
             text: app.btn14Text
-            font_size:30 
+            font_size:0.0375*root.width#30 
             font_name: 'ARCADE.TTF' 
             markup: True 
             color: 1,0,1,1
@@ -772,7 +787,7 @@ ScreenManagement:
                 app.bck15_color = 1,1,1,0.2
                 app.root.current = "work"
             text: app.btn15Text
-            font_size:30 
+            font_size:0.0375*root.width#30 
             font_name: 'ARCADE.TTF' 
             markup: True 
             color: 1,0,1,1
@@ -792,7 +807,7 @@ ScreenManagement:
                 app.bck16_color = 1,1,1,0.2
                 app.root.current = "work"
             text: app.btn16Text
-            font_size:30 
+            font_size:0.0375*root.width#30 
             font_name: 'ARCADE.TTF' 
             markup: True 
             color: 1,0,1,1
@@ -809,7 +824,7 @@ ScreenManagement:
                 app.initAllBtnTxt()
                 app.root.current = "slevel"
             text: "Back"
-            font_size:25  
+            font_size:0.03125*root.width#30   
             font_name: 'ARCADE.TTF' 
             markup: True
             pos_hint:{'center_x':0.1, 'center_y':0.95}  #0.05
@@ -822,7 +837,7 @@ ScreenManagement:
                 app.initAllBtnTxt()
                 app.root.current = "start"
             text: "Exit"
-            font_size:25  
+            font_size:0.03125*root.width#30   
             font_name: 'ARCADE.TTF' 
             markup: True
             pos_hint:{'center_x':0.9, 'center_y':0.95} 
@@ -838,8 +853,6 @@ ScreenManagement:
         app.textToSpeechgTTS()
         #self.teststuff()
         #app.engine.runAndWait()
-    # _on_keyboard_down: 
-    #     trig_fnc = entr.trigger_action() 
     ScrollView:
         #orientation: "horizontal"
         size_hint:1, None
@@ -851,10 +864,10 @@ ScreenManagement:
                 text: app.questionkvString
                 font_name: 'georgia.ttf'#'6809 chargen.ttf'
                 markup: True
-                font_size: root.width*0.0225#root.width*0.025 #20 
+                font_size: root.width*0.0225#root.width*0.025 #18 #20 
                 pos_hint:{'center_x':0.285, 'center_y':0.55}#0.34   #0.4 right:,top:
                 size_hint_y: None
-                text_size: 320,None  #self.width, None  #
+                text_size: root.width*0.4,None #320 #self.width, None  #
                 height: self.texture_size[1]  
                 halign: 'left'
                 #size_hint:0.3,0.2 
@@ -866,16 +879,16 @@ ScreenManagement:
                 font_size: root.width*0.0188  #15  
                 pos_hint:{'center_x':0.34, 'center_y':0.2}   #0.4
                 size_hint_y: None
-                text_size: 400,None  #self.width, None  #
+                text_size: 0.5*root.width,None #400 #self.width, None  #
                 height: self.texture_size[1]  
                 halign: 'left'
                 color: 1,1,0.6,1
             TextInput:
                 id: tinput
                 font_name: 'georgia.ttf'
-                font_size: '24sp'
+                font_size: 0.03*root.width#24#'24sp'
                 halign: 'left'
-                size_hint: 0.160,0.07
+                size_hint: 0.160,0.08
                 pos_hint:{'center_x':0.15, 'center_y':0.4}
                 multiline: False
                 background_color: 1, 1, 0.6, 1   #171, 183, 183, 1 #rgba(103, 128, 159, 1)
@@ -883,6 +896,10 @@ ScreenManagement:
             Button:
                 id: entr
                 on_release: 
+                    #app.tExc = 0
+                    #app.stop_threads = True
+                    #app.t1.join()
+                    #cntr.popon = 1
                     app.ans_ent = tinput.text
                     tinput.text = ""
                     app.showBtnTxt(app.currGrid)
@@ -900,13 +917,13 @@ ScreenManagement:
                 font_size:root.width*0.0188#15   
                 size: self.texture_size
                 pos_hint:{'center_x':0.35, 'center_y':0.4}  
-                size_hint:0.125,0.07 
+                size_hint:0.125,0.08 
                 color: 1,0,1,1
             Image:
                 allow_stretch: True
                 #color: 1,1,1,0.2
                 source: app.icon
-                keep_ratio: False  # True #
+                keep_ratio: True  # True #
                 pos_hint:{'center_x':0.25, 'center_y':0.85}  
                 size_hint:0.34,0.19 #0.34,0.19
             Button:
@@ -915,7 +932,7 @@ ScreenManagement:
                     app.returnQuestion()
                     app.root.current = "done"
                 text: "Quit"
-                font_size:25  
+                font_size:0.03125*root.width #25  
                 font_name: 'ARCADE.TTF' 
                 markup: True
                 pos_hint:{'center_x':0.85, 'center_y':0.15} 
@@ -925,6 +942,9 @@ ScreenManagement:
 
 <WorkingScreen4>:
     name: "work4"
+    on_enter:
+        app.questionkvString = app.strmksentence 
+        app.textToSpeechgTTS()
     FloatLayout:
         TotalPointsLabel
         Label:
@@ -934,7 +954,7 @@ ScreenManagement:
             font_size: root.width*0.0225 
             pos_hint:{'center_x':0.48, 'center_y':0.75}
             size_hint_y: None
-            text_size: 280,None  
+            text_size: 0.35*root.width,None #280
             height: self.texture_size[1]  
             halign: 'left'
             #size_hint:0.3,0.2 
@@ -963,7 +983,7 @@ ScreenManagement:
                 app.selSentenString += " "+app.btn1Text
                 app.root.current = app.screenName
             text: app.btn1Text
-            font_size:30 
+            font_size:0.0375*root.width#30
             font_name: 'ARCADE.TTF' 
             markup: True 
             color: 1,1,1,1
@@ -984,7 +1004,7 @@ ScreenManagement:
                 app.selSentenString += " "+app.btn2Text
                 app.root.current = app.screenName
             text: app.btn2Text
-            font_size:30 
+            font_size:0.0375*root.width#30
             font_name: 'ARCADE.TTF' 
             markup: True 
             color: 1,1,1,1
@@ -1005,7 +1025,7 @@ ScreenManagement:
                 app.selSentenString += " "+app.btn3Text
                 app.root.current = app.screenName
             text: app.btn3Text
-            font_size:30 
+            font_size:0.0375*root.width#30
             font_name: 'ARCADE.TTF' 
             markup: True 
             color: 1,1,1,1
@@ -1026,7 +1046,7 @@ ScreenManagement:
                 app.selSentenString += " "+app.btn4Text
                 app.root.current = app.screenName
             text: app.btn4Text
-            font_size:30 
+            font_size:0.0375*root.width#30
             font_name: 'ARCADE.TTF' 
             markup: True 
             color: 1,1,1,1
@@ -1041,7 +1061,7 @@ ScreenManagement:
                 app.selSentenString = ""
                 app.root.current = "work4"
             text: "Clear"
-            font_size:25  
+            font_size:0.03125*root.width#25 
             font_name: 'ARCADE.TTF' 
             markup: True
             pos_hint:{'center_x':0.635, 'center_y':0.25}  #0.05
@@ -1051,9 +1071,10 @@ ScreenManagement:
             id: bquit
             on_release:
                 app.endGame()
+                app.questionkvString = "1"
                 app.root.current = "done"
             text: "X"
-            font_size:25  
+            font_size:0.03125*root.width#25 
             font_name: 'ARCADE.TTF' 
             markup: True
             pos_hint:{'center_x':0.1, 'center_y':0.95} 
@@ -1063,6 +1084,9 @@ ScreenManagement:
 
 <WorkingScreen9>:
     name: "work9"
+    on_enter:
+        app.questionkvString = app.strmksentence 
+        app.textToSpeechgTTS()
     FloatLayout:
         TotalPointsLabel    
         Label:
@@ -1072,7 +1096,7 @@ ScreenManagement:
             font_size: root.width*0.0225 
             pos_hint:{'center_x':0.37, 'center_y':0.84}
             size_hint_y: None
-            text_size: 280,None  
+            text_size: 0.35*root.width,None #280 
             height: self.texture_size[1]  
             halign: 'left'
             #size_hint:0.3,0.2 
@@ -1096,7 +1120,7 @@ ScreenManagement:
                 app.selSentenString += " "+app.btn1Text
                 app.root.current = app.screenName
             text: app.btn1Text
-            font_size:30 
+            font_size:0.0375*root.width#30
             font_name: 'ARCADE.TTF' 
             markup: True 
             color: 1,1,1,1
@@ -1112,7 +1136,7 @@ ScreenManagement:
                 app.selSentenString += " "+app.btn2Text
                 app.root.current = app.screenName
             text: app.btn2Text
-            font_size:30 
+            font_size:0.0375*root.width#30
             font_name: 'ARCADE.TTF' 
             markup: True 
             color: 1,1,1,1
@@ -1128,7 +1152,7 @@ ScreenManagement:
                 app.selSentenString += " "+app.btn3Text
                 app.root.current = app.screenName
             text: app.btn3Text
-            font_size:30 
+            font_size:0.0375*root.width#30
             font_name: 'ARCADE.TTF' 
             markup: True 
             color: 1,1,1,1
@@ -1144,7 +1168,7 @@ ScreenManagement:
                 app.selSentenString += " "+app.btn4Text
                 app.root.current = app.screenName
             text: app.btn4Text
-            font_size:30 
+            font_size:0.0375*root.width#30
             font_name: 'ARCADE.TTF' 
             markup: True 
             color: 1,1,1,1
@@ -1160,7 +1184,7 @@ ScreenManagement:
                 app.selSentenString += " "+app.btn5Text
                 app.root.current = app.screenName
             text: app.btn5Text
-            font_size:30 
+            font_size:0.0375*root.width#30
             font_name: 'ARCADE.TTF' 
             markup: True 
             color: 1,1,1,1
@@ -1176,7 +1200,7 @@ ScreenManagement:
                 app.selSentenString += " "+app.btn6Text
                 app.root.current = app.screenName
             text: app.btn6Text
-            font_size:30 
+            font_size:0.0375*root.width#30
             font_name: 'ARCADE.TTF' 
             markup: True 
             color: 1,1,1,1
@@ -1192,7 +1216,7 @@ ScreenManagement:
                 app.selSentenString += " "+app.btn7Text
                 app.root.current = app.screenName
             text: app.btn7Text
-            font_size:30 
+            font_size:0.0375*root.width#30 
             font_name: 'ARCADE.TTF' 
             markup: True 
             color: 1,1,1,1
@@ -1208,7 +1232,7 @@ ScreenManagement:
                 app.selSentenString += " "+app.btn8Text
                 app.root.current = app.screenName
             text: app.btn8Text
-            font_size:30 
+            font_size:0.0375*root.width#30
             font_name: 'ARCADE.TTF' 
             markup: True 
             color: 1,1,1,1
@@ -1224,7 +1248,7 @@ ScreenManagement:
                 app.selSentenString += " "+app.btn9Text
                 app.root.current = app.screenName
             text: app.btn9Text
-            font_size:30 
+            font_size:0.0375*root.width#30
             font_name: 'ARCADE.TTF' 
             markup: True 
             color: 1,1,1,1
@@ -1239,7 +1263,7 @@ ScreenManagement:
                 app.selSentenString = ""
                 app.root.current = "work9"
             text: "Clear"
-            font_size:25  
+            font_size:0.03125*root.width#25
             font_name: 'ARCADE.TTF' 
             markup: True
             pos_hint:{'center_x':0.735, 'center_y':0.15}  #0.05  0.84
@@ -1249,9 +1273,10 @@ ScreenManagement:
             id: bquit
             on_release:
                 app.endGame()
+                app.questionkvString = "1"
                 app.root.current = "done"
             text: "X"
-            font_size:25  
+            font_size:0.03125*root.width#25
             font_name: 'ARCADE.TTF' 
             markup: True
             pos_hint:{'center_x':0.1, 'center_y':0.95} 
@@ -1261,6 +1286,9 @@ ScreenManagement:
 
 <WorkingScreen16>:
     name: "work16"
+    on_enter:
+        app.questionkvString = app.strmksentence 
+        app.textToSpeechgTTS()
     FloatLayout:
         TotalPointsLabel    
         Label:
@@ -1270,7 +1298,7 @@ ScreenManagement:
             font_size: root.width*0.0225 
             pos_hint:{'center_x':0.36, 'center_y':0.83}
             size_hint_y: None
-            text_size: 320,None  
+            text_size:0.4*root.width,None  #320
             height: self.texture_size[1]  
             halign: 'left'
             #size_hint:0.3,0.2 
@@ -1294,7 +1322,7 @@ ScreenManagement:
                 app.selSentenString += " "+app.btn1Text
                 app.root.current = app.screenName
             text: app.btn1Text
-            font_size:22.5
+            font_size:0.028125*root.width#22.5
             font_name: 'ARCADE.TTF' 
             markup: True 
             color: 1,1,1,1
@@ -1310,7 +1338,7 @@ ScreenManagement:
                 app.selSentenString += " "+app.btn2Text
                 app.root.current = app.screenName
             text: app.btn2Text
-            font_size:22.5
+            font_size:0.028125*root.width#22.5
             font_name: 'ARCADE.TTF' 
             markup: True 
             color: 1,1,1,1
@@ -1326,7 +1354,7 @@ ScreenManagement:
                 app.selSentenString += " "+app.btn3Text
                 app.root.current = app.screenName
             text: app.btn3Text
-            font_size:22.5
+            font_size:0.028125*root.width#22.5
             font_name: 'ARCADE.TTF' 
             markup: True 
             color: 1,1,1,1
@@ -1342,7 +1370,7 @@ ScreenManagement:
                 app.selSentenString += " "+app.btn4Text
                 app.root.current = app.screenName
             text: app.btn4Text
-            font_size:22.5
+            font_size:0.028125*root.width#22.5
             font_name: 'ARCADE.TTF' 
             markup: True 
             color: 1,1,1,1
@@ -1358,7 +1386,7 @@ ScreenManagement:
                 app.selSentenString += " "+app.btn5Text
                 app.root.current = app.screenName
             text: app.btn5Text
-            font_size:22.5 
+            font_size:0.028125*root.width#22.5
             font_name: 'ARCADE.TTF' 
             markup: True 
             color: 1,1,1,1
@@ -1374,7 +1402,7 @@ ScreenManagement:
                 app.selSentenString += " "+app.btn6Text
                 app.root.current = app.screenName
             text: app.btn6Text
-            font_size:22.5 
+            font_size:0.028125*root.width#22.5 
             font_name: 'ARCADE.TTF' 
             markup: True 
             color: 1,1,1,1
@@ -1390,7 +1418,7 @@ ScreenManagement:
                 app.selSentenString += " "+app.btn7Text
                 app.root.current = app.screenName
             text: app.btn7Text
-            font_size:22.5
+            font_size:0.028125*root.width#22.5
             font_name: 'ARCADE.TTF' 
             markup: True 
             color: 1,1,1,1
@@ -1406,7 +1434,7 @@ ScreenManagement:
                 app.selSentenString += " "+app.btn8Text
                 app.root.current = app.screenName
             text: app.btn8Text
-            font_size:22.5
+            font_size:0.028125*root.width#22.5
             font_name: 'ARCADE.TTF' 
             markup: True 
             color: 1,1,1,1
@@ -1422,7 +1450,7 @@ ScreenManagement:
                 app.selSentenString += " "+app.btn9Text
                 app.root.current = app.screenName
             text: app.btn9Text
-            font_size:22.5 
+            font_size:0.028125*root.width#22.5 
             font_name: 'ARCADE.TTF' 
             markup: True 
             color: 1,1,1,1
@@ -1438,7 +1466,7 @@ ScreenManagement:
                 app.selSentenString += " "+app.btn10Text
                 app.root.current = app.screenName
             text: app.btn10Text
-            font_size:22.5
+            font_size:0.028125*root.width#22.5
             font_name: 'ARCADE.TTF' 
             markup: True 
             color: 1,1,1,1
@@ -1454,7 +1482,7 @@ ScreenManagement:
                 app.selSentenString += " "+app.btn11Text
                 app.root.current = app.screenName
             text: app.btn11Text
-            font_size:22.5 
+            font_size:0.028125*root.width#22.5
             font_name: 'ARCADE.TTF' 
             markup: True 
             color: 1,1,1,1
@@ -1470,7 +1498,7 @@ ScreenManagement:
                 app.selSentenString += " "+app.btn12Text
                 app.root.current = app.screenName
             text: app.btn12Text
-            font_size:22.5
+            font_size:0.028125*root.width#22.5
             font_name: 'ARCADE.TTF' 
             markup: True 
             color: 1,1,1,1
@@ -1486,7 +1514,7 @@ ScreenManagement:
                 app.selSentenString += " "+app.btn13Text
                 app.root.current = app.screenName
             text: app.btn13Text
-            font_size:22.5 
+            font_size:0.028125*root.width#22.5 
             font_name: 'ARCADE.TTF' 
             markup: True 
             color: 1,1,1,1
@@ -1502,7 +1530,7 @@ ScreenManagement:
                 app.selSentenString += " "+app.btn14Text
                 app.root.current = app.screenName
             text: app.btn14Text
-            font_size:22.5
+            font_size:0.028125*root.width#22.5
             font_name: 'ARCADE.TTF' 
             markup: True 
             color: 1,1,1,1
@@ -1518,7 +1546,7 @@ ScreenManagement:
                 app.selSentenString += " "+app.btn15Text
                 app.root.current = app.screenName
             text: app.btn15Text
-            font_size:22.5
+            font_size:0.028125*root.width#22.5
             font_name: 'ARCADE.TTF' 
             markup: True 
             color: 1,1,1,1
@@ -1534,7 +1562,7 @@ ScreenManagement:
                 app.selSentenString += " "+app.btn16Text
                 app.root.current = app.screenName
             text: app.btn16Text
-            font_size:22.5
+            font_size:0.028125*root.width#22.5
             font_name: 'ARCADE.TTF' 
             markup: True 
             color: 1,1,1,1
@@ -1549,7 +1577,7 @@ ScreenManagement:
                 app.selSentenString = ""
                 app.root.current = "work16"
             text: "Clear"
-            font_size:25  
+            font_size:0.03125*root.width#25  
             font_name: 'ARCADE.TTF' 
             markup: True
             pos_hint:{'center_x':0.705, 'center_y':0.15}  #0.05
@@ -1559,9 +1587,10 @@ ScreenManagement:
             id: bquit
             on_release:
                 app.endGame()
+                app.questionkvString = "1"
                 app.root.current = "done"
             text: "X"
-            font_size:25  
+            font_size:0.03125*root.width#25  
             font_name: 'ARCADE.TTF' 
             markup: True
             pos_hint:{'center_x':0.1, 'center_y':0.95} 
@@ -1578,11 +1607,11 @@ ScreenManagement:
             text: app.questionkvString 
             font_name: '6809 chargen.ttf'
             markup: True
-            #font_size:30   
+            #font_size:0.0375*root.width#30   
             pos_hint:{'center_x':0.35, 'center_y':0.7}  
             font_size: root.width*0.0375  #15  
             size_hint_y: None
-            text_size: 400,None  #self.width, None  #
+            text_size: 0.5*root.width,None #400 #self.width, None  #
             height: self.texture_size[1]  
             halign: 'left'
             color: 0,0,1,1
@@ -1595,7 +1624,7 @@ ScreenManagement:
                 app.initAllBtnTxt()
                 app.root.current = "slevel"
             text: "Play Again"
-            font_size:25  
+            font_size:0.03125*root.width#25   
             font_name: 'ARCADE.TTF' 
             markup: True
             pos_hint:{'center_x':0.2, 'center_y':0.4} 
@@ -1604,13 +1633,14 @@ ScreenManagement:
         Button:
             id: b2
             on_release:
-                app.restart()
-                app.set_all_btn_Disabled(False)
-                app.set_all_bck_color([1,1,1,1])
-                app.initAllBtnTxt()
-                app.root.current = "start"
+                #app.restart()
+                #app.set_all_btn_Disabled(False)
+                #app.set_all_bck_color([1,1,1,1])
+                #app.initAllBtnTxt()
+                #app.root.current = "start"
+                app.get_running_app().stop()
             text: "Exit"
-            font_size:25  
+            font_size:0.03125*root.width#25
             font_name: 'ARCADE.TTF' 
             markup: True
             pos_hint:{'center_x':0.8, 'center_y':0.4} 
