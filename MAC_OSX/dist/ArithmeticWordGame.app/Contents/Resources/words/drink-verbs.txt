@@ -1,7 +1,0 @@
-drink
-gulp
-touch
-smell
-see
-sip
-pour

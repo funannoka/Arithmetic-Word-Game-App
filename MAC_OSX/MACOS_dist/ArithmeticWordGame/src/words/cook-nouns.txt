@@ -1,0 +1,13 @@
+meal
+food
+spaghetti
+rice
+beans
+chilli
+steak
+chicken
+pasta
+macaroni
+soup
+vegetable
+egg

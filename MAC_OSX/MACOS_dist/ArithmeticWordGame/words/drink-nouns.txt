@@ -1,0 +1,13 @@
+tea
+water
+soda
+juice
+coffee
+milk
+lemonade
+milkshake
+punch
+cream
+chocolate
+latte
+smoothie
