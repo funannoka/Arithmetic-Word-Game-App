@@ -1,6 +1,0 @@
-eat
-drink
-bake
-smell
-feel
-cook

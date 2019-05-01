@@ -1,14 +1,14 @@
 # Arithmetic Word Game App For Grade School Kids
 
-![alt text](gameScreens/LandingPage.png)
-![alt text](gameScreens/LevelsPage.png)
+![alt text](gameScreens/Android_landingPage.png)
+![alt text](gameScreens/LevelsPageAndroid.png)
 ![alt text](gameScreens/level_1_sample_grid.png)
-![alt text](gameScreens/level_2_sample_grid.png)
-![alt text](gameScreens/level_3_sample_grid.png)
-![alt text](gameScreens/working_screen.png)
-![alt text](gameScreens/enter_word.png)
-![alt text](gameScreens/done_screen.png)
-![alt text](gameScreens/level2_4grids_completed.png)
+![alt text](gameScreens/level_2_Android.png)
+![alt text](gameScreens/Level3_Android.png)
+![alt text](gameScreens/wrkingPage_Android.png)
+![alt text](gameScreens/enter_word_android.png)
+![alt text](gameScreens/correct_android.png)
+![alt text](gameScreens/answers_unlocked_android.png)
 
 ## Scope
 
